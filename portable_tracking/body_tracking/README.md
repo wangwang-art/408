@@ -19,6 +19,10 @@ AIGC:
 
 ## 运行
 
+便携分发场景（推荐）：直接双击本目录下的 `一键启动.bat`，无需安装 Python 环境。
+
+手动运行（需已配置 Python 环境）：
+
 ```bash
 python body_tracking.py
 ```
