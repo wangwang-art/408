@@ -15,3 +15,6 @@ build/
 
 # Local project workdir (contains dev venvs, zips, intermediates)
 project/
+
+# Portable tracking embedded runtime (370MB, distributed locally, not on GitHub)
+portable_tracking/runtime/
