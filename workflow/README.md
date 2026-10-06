@@ -1,3 +1,4 @@
+
 # ComfyUI 工作流介绍
 
 本目录包含 3 个 ComfyUI 工作流（JSON 格式），覆盖文生图、写实转动漫、参考图生成视频三类场景。将 JSON 文件直接拖入 ComfyUI 画布，或通过 Workflow 导入菜单加载即可使用。
@@ -48,6 +49,11 @@ UNETLoader（加载 `z_image_bf16.safetensors`）→ KSampler（euler / beta，2
 
 将写实图片转换为二次元动漫风格。工作流先通过 z-image-turbo 文生图生成写实底图，再以 Qwen Image Edit 模型 + anything2anime LoRA 进行低降噪图生图重绘，得到动漫化结果。内置王家卫风格电影感示例提示词。
 
+### 效果展示
+
+![写实底图](examples/real-to-anime-input.png)
+![动漫化结果](examples/real-to-anime-output.png)
+
 ### 节点流程
 
 两阶段串联：
@@ -82,6 +88,10 @@ UNETLoader（加载 `z_image_bf16.safetensors`）→ KSampler（euler / beta，2
 ### 用途
 
 以一张参考图 + 英文提示词生成短视频（含人物语音），输出 MP4。示例场景为缅甸城市屋顶上女子挥手说话，提示词内已写入台词（"We are in Myanmar."）。基于 MiniMax H3 视频模型，可同时生成画面与音轨。
+
+### 效果展示
+
+[示例视频（MP4）](examples/videoflow-h3-demo.mp4)
 
 ### 节点流程
 
@@ -122,4 +132,3 @@ LoadImage 加载参考图 → MiniMaxH3ReferenceToVideo（参考图 + 提示词 
 - 模型文件体积较大（z-image、MiniMax H3 系列为 GB 级），未包含在本仓库中，需单独下载放置；
 - `real to anime.json` 的 GGUFLoaderKJ 节点来自 comfyui-kjnodes 自定义节点包，缺失时需先安装；
 - 视频生成（videoflow H3）对显存要求较高，建议在独立显卡 16GB 以上环境运行。
-
