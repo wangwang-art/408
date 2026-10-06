@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+venv311/
+
+# Node
+node_modules/
+
+# Build artifacts
+dist/
+build/
+
+# Local project workdir (contains dev venvs, zips, intermediates)
+project/
