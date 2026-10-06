@@ -1,14 +1,3 @@
----
-AIGC:
-    Label: "1"
-    ContentProducer: 001191440300708461136T1XGW3
-    ProduceID: 626eed80195b74d1bf570a0768dfed33_c8cd8da7c15a11f1bc7f525400638852
-    ReservedCode1: t41VX3fzkelwRzjepRPYuTW15sEHz3/m/ZfUCi2KzfKxnrIOigXcCdX1UzS+sK5RbKYKD+StRclecAH6ypUpDGqrCfsaVm62juwZWclDshOXRKlOBGgSyrDwvHivTZcdj9zgCx0wG19O8devhGDdDL41WLxJgy4j85wg8JlqSE4E/PeHPNbVgATqHC4=
-    ContentPropagator: 001191440300708461136T1XGW3
-    PropagateID: 626eed80195b74d1bf570a0768dfed33_c8cd8da7c15a11f1bc7f525400638852
-    ReservedCode2: t41VX3fzkelwRzjepRPYuTW15sEHz3/m/ZfUCi2KzfKxnrIOigXcCdX1UzS+sK5RbKYKD+StRclecAH6ypUpDGqrCfsaVm62juwZWclDshOXRKlOBGgSyrDwvHivTZcdj9zgCx0wG19O8devhGDdDL41WLxJgy4j85wg8JlqSE4E/PeHPNbVgATqHC4=
----
-
 # 手部追踪（Hand Tracking）
 
 基于 MediaPipe Hand Landmarker 的摄像头实时手部关键点追踪程序。

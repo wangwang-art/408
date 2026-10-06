@@ -1,14 +1,3 @@
----
-AIGC:
-    Label: "1"
-    ContentProducer: 001191440300708461136T1XGW3
-    ProduceID: 626eed80195b74d1bf570a0768dfed33_ca83876ec15a11f1bc7f525400638852
-    ReservedCode1: LNmfFlKWJe6OPpxfdHLZdzOBFLdCsCoMh4ge30c3FZDdHOXDwNofURpul6yGwH+GVfbkirlFnuPpOWIbjUF1ipbA0HPUXG75Icgez5bKtop82L0YdRQJYZVAnJjHJpSDG8hZBUGLDE9Os5ghmVZgCKx8tRvaI1M44duzs29oYCsufM1lWar7N2CqWZk=
-    ContentPropagator: 001191440300708461136T1XGW3
-    PropagateID: 626eed80195b74d1bf570a0768dfed33_ca83876ec15a11f1bc7f525400638852
-    ReservedCode2: LNmfFlKWJe6OPpxfdHLZdzOBFLdCsCoMh4ge30c3FZDdHOXDwNofURpul6yGwH+GVfbkirlFnuPpOWIbjUF1ipbA0HPUXG75Icgez5bKtop82L0YdRQJYZVAnJjHJpSDG8hZBUGLDE9Os5ghmVZgCKx8tRvaI1M44duzs29oYCsufM1lWar7N2CqWZk=
----
-
 # 身体追踪（Body Tracking）
 
 基于 MediaPipe Pose 的摄像头实时人体姿态追踪程序。

@@ -1,14 +1,3 @@
----
-AIGC:
-    Label: "1"
-    ContentProducer: 001191440300708461136T1XGW3
-    ProduceID: 626eed80195b74d1bf570a0768dfed33_c9a75166c15a11f1a05452540064ee0f
-    ReservedCode1: Y4i+DWEiDvUO+bWux6JYbS0sBVXmrTO9VRXTQxkCIwumSWnwrJH6nt/ImSdVdVD0NRNHtNn78qcbIquMT7CzjkIa+CbHjLBJYF29DMLy6T9hbvw//xpuYCwmiDPYRz1/xG9AZZa0Mxzt8UIojm2XaE1YPri+WAP8NmXg9VrErW22QT82eLJ+0fRfthY=
-    ContentPropagator: 001191440300708461136T1XGW3
-    PropagateID: 626eed80195b74d1bf570a0768dfed33_c9a75166c15a11f1a05452540064ee0f
-    ReservedCode2: Y4i+DWEiDvUO+bWux6JYbS0sBVXmrTO9VRXTQxkCIwumSWnwrJH6nt/ImSdVdVD0NRNHtNn78qcbIquMT7CzjkIa+CbHjLBJYF29DMLy6T9hbvw//xpuYCwmiDPYRz1/xG9AZZa0Mxzt8UIojm2XaE1YPri+WAP8NmXg9VrErW22QT82eLJ+0fRfthY=
----
-
 # 脸部追踪（Face Tracking）
 
 基于 MediaPipe Face Landmarker 的摄像头实时人脸关键点追踪程序。
