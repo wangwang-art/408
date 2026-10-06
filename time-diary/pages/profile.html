@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的</title>
+    <style id="theme-vars">
+/* ============================================================
+   时间日记 · 二次元风格设计令牌 (Design Tokens)
+   风格基调：奶油暖底 + 蜜桃珊瑚主色 + 樱花粉点缀
+   参考「爱时间」的信息架构 × 二次元轻量插画氛围
+   ============================================================ */
+
+:root {
+  /* ---------- 品牌主色（单一主色相：蜜桃珊瑚） ---------- */
+  --diary-primary: #ff8a7a;            /* 品牌主色：蜜桃珊瑚 */
+  --diary-primary-strong: #f97a68;     /* 主色深一档（按压态） */
+  --diary-primary-soft: #fff0ec;       /* 主色 8% 浅底（选中/标签底） */
+  --diary-primary-tint: #ffe4dc;       /* 主色浅色阶（进度条底） */
+  --diary-primary-ink: #ffffff;        /* 主色上的文字 */
+
+  /* ---------- 中性色（暖灰奶油系） ---------- */
+  --diary-background: #fffaf7;         /* 页面底：奶油白 */
+  --diary-surface: #ffffff;            /* 卡片面 */
+  --diary-surface-2: #fff3ee;          /* 次级面 / 悬停 */
+  --diary-foreground: #4a3530;         /* 主文字：暖深棕 */
+  --diary-muted: #fff1ec;              /* 弱化面 */
+  --diary-muted-foreground: #a08a82;   /* 弱化文字 */
+  --diary-border: #f6e3dc;             /* 分隔线 / 描边 */
+  --diary-input: #f6e3dc;              /* 输入框描边 */
+  --diary-ring: rgba(255, 138, 122, 0.35); /* 聚焦环 */
+
+  /* ---------- 语义别名（head 契约必需映射） ---------- */
+  --diary-card: var(--diary-surface);
+  --diary-card-foreground: var(--diary-foreground);
+  --diary-popover: var(--diary-surface);
+  --diary-popover-foreground: var(--diary-foreground);
+  --diary-primary-foreground: var(--diary-primary-ink);
+
+  /* ---------- 语义状态色（仅用于状态） ---------- */
+  --state-success: #7bc8a4;
+  --state-warning: #f2b86b;
+  --state-error: #ef7d78;
+  --state-info: #7fb5d9;
+
+  /* ---------- 排版 ---------- */
+  --diary-font-primary: "Inter", "HarmonyOS Sans SC", "PingFang SC", "MiSans", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+  --diary-font-display: "Inter", "HarmonyOS Sans SC", "PingFang SC", "MiSans", "Noto Sans SC", system-ui, sans-serif;
+
+  /* ---------- 圆角（二次元柔和风格，卡片最大 20px） ---------- */
+  --diary-radius-small: 4px;
+  --diary-radius-medium: 12px;
+  --diary-radius-large: 20px;
+  --diary-radius-full: 9999px;
+
+  /* ---------- 阴影（静态面极浅，浮层可更深） ---------- */
+  --diary-shadow-1: 0 1px 2px rgba(143, 74, 58, 0.05), 0 1px 1px rgba(143, 74, 58, 0.03);
+  --diary-shadow-2: 0 8px 24px -8px rgba(143, 74, 58, 0.18);
+  --diary-shadow-3: 0 24px 60px -20px rgba(143, 74, 58, 0.30);
+}
+
+/* ---------- 暗色模式（午夜暖棕） ---------- */
+.dark {
+  --diary-primary: #ff9a8c;
+  --diary-primary-strong: #ffab9e;
+  --diary-primary-soft: rgba(255, 154, 140, 0.16);
+  --diary-primary-tint: rgba(255, 154, 140, 0.10);
+  --diary-primary-ink: #3a2119;
+
+  --diary-background: #1c1513;
+  --diary-surface: #251d1a;
+  --diary-surface-2: #2e2420;
+  --diary-foreground: #f3e8e2;
+  --diary-muted: #2e2420;
+  --diary-muted-foreground: #a8948a;
+  --diary-border: #3a2c27;
+  --diary-input: #3a2c27;
+  --diary-ring: rgba(255, 154, 140, 0.40);
+
+  --diary-card: var(--diary-surface);
+  --diary-card-foreground: var(--diary-foreground);
+  --diary-popover: var(--diary-surface);
+  --diary-popover-foreground: var(--diary-foreground);
+  --diary-primary-foreground: var(--diary-primary-ink);
+
+  --diary-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --diary-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --diary-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+}
+
+/* ============================================================
+   排版类（Typography Classes）
+   ============================================================ */
+.diary-display {
+  font-family: var(--diary-font-display);
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--diary-foreground);
+  text-wrap: balance;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.diary-h1 {
+  font-family: var(--diary-font-display);
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--diary-foreground);
+  text-wrap: balance;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.diary-h2 {
+  font-family: var(--diary-font-display);
+  font-size: clamp(20px, 2.6vw, 28px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--diary-foreground);
+}
+.diary-h3 {
+  font-family: var(--diary-font-display);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--diary-foreground);
+}
+.diary-body {
+  font-family: var(--diary-font-primary);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--diary-foreground);
+}
+.diary-body-large {
+  font-family: var(--diary-font-primary);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--diary-foreground);
+}
+.diary-caption {
+  font-family: var(--diary-font-primary);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+  color: var(--diary-muted-foreground);
+}
+.diary-num {
+  font-family: var(--diary-font-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   通用组件基类（二次元风格统一语言）
+   ============================================================ */
+.diary-card {
+  background: var(--diary-surface);
+  border: 1px solid var(--diary-border);
+  border-radius: var(--diary-radius-large);
+  box-shadow: var(--diary-shadow-1);
+}
+.diary-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--diary-radius-full);
+  background: var(--diary-surface-2);
+  color: var(--diary-foreground);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.diary-chip-primary {
+  background: var(--diary-primary-soft);
+  color: var(--diary-primary-strong);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--diary-background);
+    --color-foreground: var(--diary-foreground);
+    --color-card: var(--diary-card);
+    --color-card-foreground: var(--diary-card-foreground);
+    --color-popover: var(--diary-popover);
+    --color-popover-foreground: var(--diary-popover-foreground);
+    --color-primary: var(--diary-primary);
+    --color-primary-foreground: var(--diary-primary-foreground);
+    --color-muted: var(--diary-muted);
+    --color-muted-foreground: var(--diary-muted-foreground);
+    --color-border: var(--diary-border);
+    --color-input: var(--diary-input);
+    --color-ring: var(--diary-ring);
+    --radius-sm: var(--diary-radius-small);
+    --radius-md: var(--diary-radius-medium);
+    --radius-lg: var(--diary-radius-large);
+  }
+  @layer base {
+    body { background: var(--diary-background); color: var(--diary-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--diary-background); }
+      .text-background { color: var(--diary-background); }
+      .border-background { border-color: var(--diary-background); }
+      .ring-background { --tw-ring-color: var(--diary-background); }
+      .bg-foreground { background-color: var(--diary-foreground); }
+      .text-foreground { color: var(--diary-foreground); }
+      .border-foreground { border-color: var(--diary-foreground); }
+      .ring-foreground { --tw-ring-color: var(--diary-foreground); }
+      .bg-card { background-color: var(--diary-card); }
+      .text-card { color: var(--diary-card); }
+      .border-card { border-color: var(--diary-card); }
+      .ring-card { --tw-ring-color: var(--diary-card); }
+      .bg-card-foreground { background-color: var(--diary-card-foreground); }
+      .text-card-foreground { color: var(--diary-card-foreground); }
+      .border-card-foreground { border-color: var(--diary-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--diary-card-foreground); }
+      .bg-popover { background-color: var(--diary-popover); }
+      .text-popover { color: var(--diary-popover); }
+      .border-popover { border-color: var(--diary-popover); }
+      .ring-popover { --tw-ring-color: var(--diary-popover); }
+      .bg-popover-foreground { background-color: var(--diary-popover-foreground); }
+      .text-popover-foreground { color: var(--diary-popover-foreground); }
+      .border-popover-foreground { border-color: var(--diary-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--diary-popover-foreground); }
+      .bg-primary { background-color: var(--diary-primary); }
+      .text-primary { color: var(--diary-primary); }
+      .border-primary { border-color: var(--diary-primary); }
+      .ring-primary { --tw-ring-color: var(--diary-primary); }
+      .bg-primary-foreground { background-color: var(--diary-primary-foreground); }
+      .text-primary-foreground { color: var(--diary-primary-foreground); }
+      .border-primary-foreground { border-color: var(--diary-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--diary-primary-foreground); }
+      .bg-muted { background-color: var(--diary-muted); }
+      .text-muted { color: var(--diary-muted); }
+      .border-muted { border-color: var(--diary-muted); }
+      .ring-muted { --tw-ring-color: var(--diary-muted); }
+      .bg-muted-foreground { background-color: var(--diary-muted-foreground); }
+      .text-muted-foreground { color: var(--diary-muted-foreground); }
+      .border-muted-foreground { border-color: var(--diary-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--diary-muted-foreground); }
+      .bg-border { background-color: var(--diary-border); }
+      .text-border { color: var(--diary-border); }
+      .border-border { border-color: var(--diary-border); }
+      .ring-border { --tw-ring-color: var(--diary-border); }
+      .bg-input { background-color: var(--diary-input); }
+      .text-input { color: var(--diary-input); }
+      .border-input { border-color: var(--diary-input); }
+      .ring-input { --tw-ring-color: var(--diary-input); }
+      .bg-ring { background-color: var(--diary-ring); }
+      .text-ring { color: var(--diary-ring); }
+      .border-ring { border-color: var(--diary-ring); }
+      .ring-ring { --tw-ring-color: var(--diary-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main class="w-full max-w-md mx-auto px-4 pb-6">
+        <!-- 用户身份卡：二次元氛围头 -->
+        <section class="diary-card identity-card relative overflow-hidden mt-4">
+            <div class="relative">
+                <img src="../assets/mascot-window.jpg" alt="看板娘·窗边书桌插画" class="mascot-banner h-40 w-full object-cover" />
+                <span class="absolute right-3 top-3 inline-flex h-6 items-center gap-1 rounded-full bg-[var(--diary-surface)]/90 px-2.5 text-[11px] font-medium text-[var(--diary-primary-strong)] backdrop-blur">
+                    <i data-lucide="sparkles" class="h-3.5 w-3.5"></i>
+                    <span class="whitespace-nowrap">守护你的时间</span>
+                </span>
+            </div>
+            <div class="relative z-10 flex items-center gap-4 p-5 pt-4">
+                <div class="min-w-0 flex-1">
+                    <h2 class="diary-h3 truncate">小时间的守护者</h2>
+                    <div class="mt-2 flex min-w-0 items-center gap-2">
+                        <p class="diary-caption truncate">已记录 128 天 · 累计 812 小时</p>
+                        <span class="diary-chip diary-chip-primary shrink-0">连续 5 天</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数据小卡行：双列 + 竖分隔线 -->
+        <section class="diary-card stats-split mt-4 grid grid-cols-2 divide-x divide-[var(--diary-border)]">
+            <div class="min-w-0 px-4 py-4 text-center">
+                <p class="diary-num stats-value">96h</p>
+                <p class="diary-caption mt-1 truncate">本月记录</p>
+            </div>
+            <div class="min-w-0 px-4 py-4 text-center">
+                <p class="diary-num stats-value">21h</p>
+                <p class="diary-caption mt-1 truncate">本周专注</p>
+            </div>
+        </section>
+
+        <!-- 功能列表卡：行式列表 -->
+        <section class="diary-card profile-list mt-4 overflow-hidden">
+            <a href="#" data-dom-id="link-category" class="profile-row">
+                <span class="profile-row-icon"><i data-lucide="palette" class="h-5 w-5 shrink-0"></i></span>
+                <span class="min-w-0 flex-1">
+                    <span class="profile-row-title">活动分类</span>
+                    <span class="profile-row-desc">管理时间分类与颜色</span>
+                </span>
+                <i data-lucide="chevron-right" class="profile-row-chevron h-4 w-4 shrink-0"></i>
+            </a>
+            <a href="#" class="profile-row">
+                <span class="profile-row-icon"><i data-lucide="download" class="h-5 w-5 shrink-0"></i></span>
+                <span class="min-w-0 flex-1">
+                    <span class="profile-row-title">数据导出</span>
+                    <span class="profile-row-desc">导出 CSV 备份</span>
+                </span>
+                <i data-lucide="chevron-right" class="profile-row-chevron h-4 w-4 shrink-0"></i>
+            </a>
+            <a href="#" class="profile-row">
+                <span class="profile-row-icon"><i data-lucide="smartphone" class="h-5 w-5 shrink-0"></i></span>
+                <span class="min-w-0 flex-1">
+                    <span class="profile-row-title">安装到桌面</span>
+                    <span class="profile-row-desc">添加到主屏幕，随时记录</span>
+                </span>
+                <span class="profile-row-badge">已支持</span>
+                <i data-lucide="chevron-right" class="profile-row-chevron h-4 w-4 shrink-0"></i>
+            </a>
+            <a href="#" class="profile-row">
+                <span class="profile-row-icon"><i data-lucide="info" class="h-5 w-5 shrink-0"></i></span>
+                <span class="min-w-0 flex-1">
+                    <span class="profile-row-title">关于应用</span>
+                    <span class="profile-row-desc">版本 1.0.0</span>
+                </span>
+                <i data-lucide="chevron-right" class="profile-row-chevron h-4 w-4 shrink-0"></i>
+            </a>
+        </section>
+
+        <!-- 数据说明卡 -->
+        <section class="diary-card mt-4 p-4">
+            <div class="flex items-center gap-2">
+                <i data-lucide="shield-check" class="h-4 w-4 shrink-0 text-[var(--state-info)]"></i>
+                <h3 class="diary-h3">数据与隐私</h3>
+            </div>
+            <p class="diary-caption mt-2.5">所有数据仅保存在本机浏览器（localStorage），不会上传服务器</p>
+            <p class="diary-caption mt-1.5">导出功能可随时备份，卸载应用前请先导出</p>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="profile-footer">
+            <p class="diary-caption text-center">时间日记 · 记录每一刻的成长</p>
+        </footer>
+    </main>
+
+    <nav data-mobile-nav="global" class="w-full max-w-md mx-auto h-16 grid grid-cols-4 border-t border-[var(--diary-border)] bg-[var(--diary-surface)]"><a href="#" data-nav-key="timeline" data-dom-id="nav-timeline" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--diary-muted-foreground)]"><i data-lucide="clock-3" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap truncate">时间轴</span></a><a href="#" data-nav-key="stats" data-dom-id="nav-stats" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--diary-muted-foreground)]"><i data-lucide="pie-chart" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap truncate">统计</span></a><a href="#" data-nav-key="goals" data-dom-id="nav-goals" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--diary-muted-foreground)]"><i data-lucide="target" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap truncate">目标</span></a><a href="#" data-nav-key="profile" data-dom-id="nav-profile" data-active="true" aria-current="page" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--diary-primary)]"><i data-lucide="user-round" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap truncate font-medium">我的</span></a></nav>
+
+    <style id="critical-layout">
+      /* 页面根：奶油暖底 + 最小高度铺满视口 */
+      body { min-height: 100dvh; background: var(--diary-background); color: var(--diary-foreground); -webkit-font-smoothing: antialiased; }
+      /* 身份卡：同色相浅阶渐变（primary-soft → primary-tint）+ 柔和描边 */
+      .identity-card { background: linear-gradient(150deg, var(--diary-primary-soft) 0%, var(--diary-primary-tint) 100%); border-color: var(--diary-primary-tint); box-shadow: var(--diary-shadow-1); }
+      .mascot-banner { display: block; width: 100%; height: 10rem; object-fit: cover; }
+      /* 数据双列：数字加粗 + caption 说明 */
+      .stats-split { box-shadow: var(--diary-shadow-1); }
+      .stats-value { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; color: var(--diary-foreground); }
+      /* 功能列表行：左图标圆底（单一中性色）+ 行分隔线 + 微交互 */
+      .profile-list { box-shadow: var(--diary-shadow-1); }
+      .profile-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 13px 16px; background: transparent; text-align: left; transition: background-color 0.18s ease; }
+      .profile-row + .profile-row { border-top: 1px solid var(--diary-border); }
+      .profile-row:hover { background: var(--diary-surface-2); }
+      .profile-row-icon { flex-shrink: 0; width: 36px; height: 36px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; background: var(--diary-surface-2); color: var(--diary-primary-strong); transition: background-color 0.18s ease; }
+      .profile-row:hover .profile-row-icon { background: var(--diary-surface); }
+      .profile-row-title { display: block; font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--diary-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .profile-row-desc { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.4; color: var(--diary-muted-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .profile-row-chevron { flex-shrink: 0; color: var(--diary-muted-foreground); transition: transform 0.18s ease; }
+      .profile-row:hover .profile-row-chevron { transform: translateX(2px); }
+      .profile-row-badge { flex-shrink: 0; font-size: 12px; font-weight: 500; color: var(--diary-primary-strong); white-space: nowrap; }
+      /* 底部导航：文档流内居中，保持与其余主 Tab 页一致 */
+      nav[data-mobile-nav="global"] { width: 100%; max-width: 28rem; margin-inline: auto; background: var(--diary-surface); border-top: 1px solid var(--diary-border); }
+      .profile-footer { padding: 20px 0 8px; }
+      /* 动效降级 */
+      @media (prefers-reduced-motion: reduce) { .profile-row, .profile-row-icon, .profile-row-chevron { transition: none; } }
+    </style>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

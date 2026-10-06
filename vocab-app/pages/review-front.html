@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>复习 - 正面</title>
+    <style id="theme-vars">
+/* ============================================================
+   Vocab App — Brand CSS
+   Design Language: Modern Minimalist + Light Skeuomorphic Cards
+   ============================================================ */
+
+/* ---------- Design Tokens (Light Mode) ---------- */
+:root {
+  /* Brand Primary — 沉稳蓝 #4A90D9 */
+  --vocab-primary: #4A90D9;
+  --vocab-primary-hover: #3A7BC8;
+  --vocab-primary-active: #2E6AB0;
+  --vocab-primary-light: #E8F1FB;
+  --vocab-primary-lighter: #F4F8FC;
+  --vocab-primary-foreground: #FFFFFF;
+
+  /* Neutral Scale */
+  --vocab-background: #F8F9FA;
+  --vocab-foreground: #2C3E50;
+  --vocab-card: #FFFFFF;
+  --vocab-card-foreground: #2C3E50;
+  --vocab-muted: #F0F2F5;
+  --vocab-muted-foreground: #7F8C8D;
+  --vocab-border: #E4E7EA;
+  --vocab-input: #E4E7EA;
+  --vocab-ring: #4A90D9;
+  --vocab-popover: #FFFFFF;
+  --vocab-popover-foreground: #2C3E50;
+
+  /* State Colors */
+  --state-success: #7ED321;
+  --state-success-light: #F0FAE6;
+  --state-warning: #F5A623;
+  --state-warning-light: #FEF5E7;
+  --state-error: #E74C3C;
+  --state-error-light: #FDECEA;
+  --state-info: #4A90D9;
+  --state-info-light: #E8F1FB;
+
+  /* Rating Scale Colors */
+  --rating-1: #E74C3C;
+  --rating-2: #F5A623;
+  --rating-3: #F1C40F;
+  --rating-4: #A8D88A;
+  --rating-5: #7ED321;
+
+  /* Radius */
+  --vocab-radius-small: 4px;
+  --vocab-radius-medium: 12px;
+  --vocab-radius-large: 16px;
+  --vocab-radius-full: 9999px;
+
+  /* Shadow — 仅卡片: #000 opacity 0.05, offset y:2, radius 8 */
+  --vocab-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --vocab-shadow-float: 0 8px 24px -8px rgba(0, 0, 0, 0.12);
+  --vocab-shadow-overlay: 0 24px 60px -20px rgba(0, 0, 0, 0.20);
+
+  /* Typography */
+  --vocab-font-sans: "Inter", -apple-system, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+  --vocab-font-mono: "SF Mono", "Cascadia Code", "JetBrains Mono", "Roboto Mono", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --vocab-space-1: 4px;
+  --vocab-space-2: 8px;
+  --vocab-space-3: 12px;
+  --vocab-space-4: 16px;
+  --vocab-space-5: 24px;
+  --vocab-space-6: 32px;
+  --vocab-space-7: 48px;
+
+  /* Motion */
+  --vocab-ease-out: cubic-bezier(0.3, 0, 0, 1);
+  --vocab-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --vocab-duration-fast: 160ms;
+  --vocab-duration-normal: 300ms;
+  --vocab-duration-slow: 480ms;
+}
+
+/* ---------- Design Tokens (Dark Mode) ---------- */
+.dark {
+  --vocab-primary: #5B9FDF;
+  --vocab-primary-hover: #6DABE5;
+  --vocab-primary-active: #4A90D9;
+  --vocab-primary-light: #1E2D40;
+  --vocab-primary-lighter: #161E2C;
+  --vocab-primary-foreground: #FFFFFF;
+
+  --vocab-background: #14141A;
+  --vocab-foreground: #E8E9EC;
+  --vocab-card: #1E1E26;
+  --vocab-card-foreground: #E8E9EC;
+  --vocab-muted: #28282F;
+  --vocab-muted-foreground: #9CA3AF;
+  --vocab-border: #2E2E38;
+  --vocab-input: #2E2E38;
+  --vocab-ring: #5B9FDF;
+  --vocab-popover: #1E1E26;
+  --vocab-popover-foreground: #E8E9EC;
+
+  --state-success: #7ED321;
+  --state-success-light: #1A2E0D;
+  --state-warning: #F5A623;
+  --state-warning-light: #2E2210;
+  --state-error: #E74C3C;
+  --state-error-light: #2E1512;
+  --state-info: #5B9FDF;
+  --state-info-light: #1E2D40;
+
+  --rating-1: #E74C3C;
+  --rating-2: #F5A623;
+  --rating-3: #F1C40F;
+  --rating-4: #A8D88A;
+  --rating-5: #7ED321;
+
+  --vocab-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --vocab-shadow-float: 0 8px 24px -8px rgba(0, 0, 0, 0.40);
+  --vocab-shadow-overlay: 0 24px 60px -20px rgba(0, 0, 0, 0.55);
+}
+
+/* ---------- Typography Classes ---------- */
+.vocab-display {
+  font-family: var(--vocab-font-sans);
+  font-size: clamp(32px, 8vw, 40px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--vocab-foreground);
+}
+
+.vocab-h1 {
+  font-family: var(--vocab-font-sans);
+  font-size: clamp(24px, 6vw, 28px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--vocab-foreground);
+}
+
+.vocab-h2 {
+  font-family: var(--vocab-font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--vocab-foreground);
+}
+
+.vocab-h3 {
+  font-family: var(--vocab-font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--vocab-foreground);
+}
+
+.vocab-body {
+  font-family: var(--vocab-font-sans);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--vocab-foreground);
+}
+
+.vocab-body-sm {
+  font-family: var(--vocab-font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--vocab-muted-foreground);
+}
+
+.vocab-caption {
+  font-family: var(--vocab-font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--vocab-muted-foreground);
+}
+
+.vocab-mono {
+  font-family: var(--vocab-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vocab-foreground);
+}
+
+.vocab-phonetic {
+  font-family: var(--vocab-font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--vocab-muted-foreground);
+  font-style: italic;
+}
+
+.vocab-word-large {
+  font-family: var(--vocab-font-sans);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--vocab-foreground);
+}
+
+.vocab-phonetic-sm {
+  font-family: var(--vocab-font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--vocab-muted-foreground);
+}
+
+/* ---------- Utility Token Aliases for Tailwind Semantic Bridge ---------- */
+/* These aliases allow Tailwind semantic classes (bg-primary, text-muted-foreground, etc.) to resolve correctly */
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--vocab-background);
+    --color-foreground: var(--vocab-foreground);
+    --color-card: var(--vocab-card);
+    --color-card-foreground: var(--vocab-card-foreground);
+    --color-popover: var(--vocab-popover);
+    --color-popover-foreground: var(--vocab-popover-foreground);
+    --color-primary: var(--vocab-primary);
+    --color-primary-foreground: var(--vocab-primary-foreground);
+    --color-muted: var(--vocab-muted);
+    --color-muted-foreground: var(--vocab-muted-foreground);
+    --color-border: var(--vocab-border);
+    --color-input: var(--vocab-input);
+    --color-ring: var(--vocab-ring);
+    --radius-sm: var(--vocab-radius-small);
+    --radius-md: var(--vocab-radius-medium);
+    --radius-lg: var(--vocab-radius-large);
+  }
+  @layer base {
+    body { background: var(--vocab-background); color: var(--vocab-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--vocab-background); }
+      .text-background { color: var(--vocab-background); }
+      .border-background { border-color: var(--vocab-background); }
+      .ring-background { --tw-ring-color: var(--vocab-background); }
+      .bg-foreground { background-color: var(--vocab-foreground); }
+      .text-foreground { color: var(--vocab-foreground); }
+      .border-foreground { border-color: var(--vocab-foreground); }
+      .ring-foreground { --tw-ring-color: var(--vocab-foreground); }
+      .bg-card { background-color: var(--vocab-card); }
+      .text-card { color: var(--vocab-card); }
+      .border-card { border-color: var(--vocab-card); }
+      .ring-card { --tw-ring-color: var(--vocab-card); }
+      .bg-card-foreground { background-color: var(--vocab-card-foreground); }
+      .text-card-foreground { color: var(--vocab-card-foreground); }
+      .border-card-foreground { border-color: var(--vocab-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--vocab-card-foreground); }
+      .bg-popover { background-color: var(--vocab-popover); }
+      .text-popover { color: var(--vocab-popover); }
+      .border-popover { border-color: var(--vocab-popover); }
+      .ring-popover { --tw-ring-color: var(--vocab-popover); }
+      .bg-popover-foreground { background-color: var(--vocab-popover-foreground); }
+      .text-popover-foreground { color: var(--vocab-popover-foreground); }
+      .border-popover-foreground { border-color: var(--vocab-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--vocab-popover-foreground); }
+      .bg-primary { background-color: var(--vocab-primary); }
+      .text-primary { color: var(--vocab-primary); }
+      .border-primary { border-color: var(--vocab-primary); }
+      .ring-primary { --tw-ring-color: var(--vocab-primary); }
+      .bg-primary-foreground { background-color: var(--vocab-primary-foreground); }
+      .text-primary-foreground { color: var(--vocab-primary-foreground); }
+      .border-primary-foreground { border-color: var(--vocab-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--vocab-primary-foreground); }
+      .bg-muted { background-color: var(--vocab-muted); }
+      .text-muted { color: var(--vocab-muted); }
+      .border-muted { border-color: var(--vocab-muted); }
+      .ring-muted { --tw-ring-color: var(--vocab-muted); }
+      .bg-muted-foreground { background-color: var(--vocab-muted-foreground); }
+      .text-muted-foreground { color: var(--vocab-muted-foreground); }
+      .border-muted-foreground { border-color: var(--vocab-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--vocab-muted-foreground); }
+      .bg-border { background-color: var(--vocab-border); }
+      .text-border { color: var(--vocab-border); }
+      .border-border { border-color: var(--vocab-border); }
+      .ring-border { --tw-ring-color: var(--vocab-border); }
+      .bg-input { background-color: var(--vocab-input); }
+      .text-input { color: var(--vocab-input); }
+      .border-input { border-color: var(--vocab-input); }
+      .ring-input { --tw-ring-color: var(--vocab-input); }
+      .bg-ring { background-color: var(--vocab-ring); }
+      .text-ring { color: var(--vocab-ring); }
+      .border-ring { border-color: var(--vocab-ring); }
+      .ring-ring { --tw-ring-color: var(--vocab-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+    <style id="critical-layout">
+  /* ===== Box Model (scoped) ===== */
+  .review-shell,
+  .review-shell *,
+  .review-shell *::before,
+  .review-shell *::after {
+    box-sizing: border-box;
+  }
+
+  /* ===== Shell Wrapper ===== */
+  .review-shell {
+    max-width: 430px;
+    min-height: 100vh;
+    margin: 0 auto;
+    background: var(--vocab-background);
+    display: flex;
+    flex-direction: column;
+    font-family: var(--vocab-font-sans);
+    color: var(--vocab-foreground);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ===== Lucide Icon Defaults ===== */
+  .review-shell svg {
+    stroke-width: 1.5;
+    flex-shrink: 0;
+  }
+
+  /* ===== Status Bar ===== */
+  .status-bar {
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    background: var(--vocab-card);
+  }
+  .status-bar__time {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    color: var(--vocab-foreground);
+  }
+  .status-bar__icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--vocab-foreground);
+  }
+  .status-bar__icons svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* ===== Top Navigation ===== */
+  .top-nav {
+    flex-shrink: 0;
+    background: var(--vocab-card);
+  }
+  .top-nav__bar {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 4px;
+  }
+  .top-nav__back {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--vocab-radius-medium);
+    color: var(--vocab-foreground);
+    cursor: pointer;
+    transition: background-color var(--vocab-duration-fast) var(--vocab-ease-out);
+  }
+  .top-nav__back:hover {
+    background: var(--vocab-muted);
+  }
+  .top-nav__back:active {
+    background: var(--vocab-border);
+  }
+  .top-nav__back:focus-visible {
+    outline: 2px solid var(--vocab-ring);
+    outline-offset: 2px;
+  }
+  .top-nav__back svg {
+    width: 24px;
+    height: 24px;
+  }
+  .top-nav__title {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--vocab-foreground);
+  }
+  .top-nav__progress {
+    flex-shrink: 0;
+    min-width: 44px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    color: var(--vocab-muted-foreground);
+  }
+  .top-nav__progress-line {
+    height: 3px;
+    background: var(--vocab-border);
+    overflow: hidden;
+  }
+  .top-nav__progress-fill {
+    height: 100%;
+    width: 8%;
+    background: var(--vocab-primary);
+  }
+
+  /* ===== Card Area ===== */
+  .card-area {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 0;
+  }
+  .card-container {
+    width: 85%;
+    margin: 0 auto;
+    min-height: 280px;
+    max-height: 320px;
+    overflow: hidden;
+    background: var(--vocab-card);
+    border-radius: var(--vocab-radius-large);
+    box-shadow: var(--vocab-shadow-card);
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===== Bottom Action Bar ===== */
+  .bottom-action-bar {
+    height: 80px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(10px, 3.5vw, 16px);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--vocab-border);
+  }
+  .bottom-action-bar__left {
+    display: flex;
+    align-items: center;
+    gap: clamp(2px, 1.6vw, 8px);
+  }
+  .bottom-action-bar__right {
+    display: flex;
+    align-items: center;
+    gap: clamp(4px, 1.86vw, 8px);
+  }
+
+  /* ===== Icon Buttons ===== */
+  .icon-btn {
+    width: clamp(36px, 10.23vw, 44px);
+    height: clamp(36px, 10.23vw, 44px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: var(--vocab-radius-medium);
+    color: var(--vocab-foreground);
+    cursor: pointer;
+    transition: background-color var(--vocab-duration-fast) var(--vocab-ease-out);
+  }
+  .icon-btn:hover {
+    background: var(--vocab-muted);
+  }
+  .icon-btn:active {
+    background: var(--vocab-border);
+  }
+  .icon-btn:focus-visible {
+    outline: 2px solid var(--vocab-ring);
+    outline-offset: 2px;
+  }
+  .icon-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* ===== Rating Buttons ===== */
+  .rating-btn {
+    width: clamp(36px, 10.23vw, 44px);
+    height: clamp(36px, 10.23vw, 44px);
+    border: none;
+    border-radius: var(--vocab-radius-full);
+    color: var(--vocab-primary-foreground);
+    font-family: var(--vocab-font-sans);
+    font-size: clamp(14px, 3.7vw, 16px);
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--vocab-duration-fast) var(--vocab-ease-out),
+                opacity var(--vocab-duration-fast) var(--vocab-ease-out);
+  }
+  .rating-btn:hover {
+    transform: scale(0.94);
+    opacity: 0.9;
+  }
+  .rating-btn:active {
+    transform: scale(0.88);
+  }
+  .rating-btn:focus-visible {
+    outline: 2px solid var(--vocab-ring);
+    outline-offset: 2px;
+  }
+  .rating-btn--1 { background: var(--rating-1); }
+  .rating-btn--2 { background: var(--rating-2); }
+  .rating-btn--3 { background: var(--rating-3); }
+  .rating-btn--4 { background: var(--rating-4); }
+  .rating-btn--5 { background: var(--rating-5); }
+
+  /* ===== Reduced Motion ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .top-nav__back,
+    .icon-btn,
+    .rating-btn {
+      transition: none;
+    }
+    .rating-btn:hover,
+    .rating-btn:active {
+      transform: none;
+    }
+  }
+    </style>
+
+    <style id="card-front-styles">
+      /* ===== Card Front (page-specific) ===== */
+      /* Add positioning context for the absolutely-placed detail button */
+      .card-container {
+        position: relative;
+      }
+
+      /* Detail access button — top-right corner of the card */
+      .card-detail-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        min-height: 44px;
+        min-width: 44px;
+        padding: 0 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        background: transparent;
+        border: none;
+        border-radius: var(--vocab-radius-small);
+        color: var(--vocab-muted-foreground);
+        font-family: var(--vocab-font-sans);
+        font-size: 13px;
+        line-height: 1;
+        cursor: pointer;
+        z-index: 2;
+        transition: color var(--vocab-duration-fast) var(--vocab-ease-out);
+      }
+      .card-detail-btn svg {
+        width: 14px;
+        height: 14px;
+      }
+      .card-detail-btn:hover {
+        color: var(--vocab-foreground);
+      }
+      .card-detail-btn:active {
+        opacity: 0.7;
+      }
+      .card-detail-btn:focus-visible {
+        outline: 2px solid var(--vocab-ring);
+        outline-offset: 2px;
+      }
+
+      /* Card tap target — transparent, fills the card content area */
+      .card-tap {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        background: transparent;
+        border: none;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        color: inherit;
+        font: inherit;
+        text-align: inherit;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .card-tap:focus-visible {
+        outline: 2px solid var(--vocab-ring);
+        outline-offset: 4px;
+        border-radius: var(--vocab-radius-large);
+      }
+
+      /* Word + phonetics, centered */
+      .card-word-group {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+      .card-word {
+        font-family: var(--vocab-font-sans);
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+        color: var(--vocab-foreground);
+        text-align: center;
+      }
+      .card-phonetic {
+        font-family: var(--vocab-font-mono);
+        font-size: 16px;
+        font-weight: 400;
+        font-style: italic;
+        color: var(--vocab-muted-foreground);
+        text-align: center;
+      }
+
+      /* Flip hint at the bottom of the card */
+      .flip-hint {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        align-self: center;
+        color: var(--vocab-muted-foreground);
+        font-family: var(--vocab-font-sans);
+        font-size: 13px;
+        line-height: 1.4;
+        animation: hint-pulse 2s ease-in-out infinite;
+      }
+      .flip-hint svg {
+        width: 16px;
+        height: 16px;
+      }
+      @keyframes hint-pulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+      }
+
+      /* Complete review trigger in the top nav */
+      .top-nav__complete {
+        flex-shrink: 0;
+        min-height: 44px;
+        padding: 0 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        border-radius: var(--vocab-radius-small);
+        color: var(--vocab-muted-foreground);
+        font-family: var(--vocab-font-sans);
+        font-size: 12px;
+        line-height: 1;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: color var(--vocab-duration-fast) var(--vocab-ease-out);
+      }
+      .top-nav__complete:hover {
+        color: var(--vocab-foreground);
+      }
+      .top-nav__complete:active {
+        opacity: 0.7;
+      }
+      .top-nav__complete:focus-visible {
+        outline: 2px solid var(--vocab-ring);
+        outline-offset: 2px;
+      }
+
+      /* Reduced motion — downgrade pulse + transitions */
+      @media (prefers-reduced-motion: reduce) {
+        .flip-hint {
+          animation: none;
+          opacity: 0.85;
+        }
+        .card-detail-btn,
+        .top-nav__complete {
+          transition: none;
+        }
+      }
+    </style>
+
+    <div class="review-shell">
+      <!-- Status Bar -->
+      <div class="status-bar" aria-hidden="true">
+        <span class="status-bar__time">9:41</span>
+        <div class="status-bar__icons">
+          <i data-lucide="signal"></i>
+          <i data-lucide="wifi"></i>
+          <i data-lucide="battery-full"></i>
+        </div>
+      </div>
+
+      <!-- Top Navigation -->
+      <header class="top-nav">
+        <div class="top-nav__bar">
+          <button class="top-nav__back" data-dom-id="back-to-home" aria-label="Back">
+            <i data-lucide="chevron-left"></i>
+          </button>
+          <span class="top-nav__title">CET-4</span>
+          <button class="top-nav__complete" data-dom-id="complete-review" aria-label="完成复习">完成复习</button>
+          <span class="top-nav__progress">1/120</span>
+        </div>
+        <div class="top-nav__progress-line" role="progressbar" aria-valuenow="8" aria-valuemin="0" aria-valuemax="100">
+          <div class="top-nav__progress-fill"></div>
+        </div>
+      </header>
+
+      <!-- Card Container Area -->
+      <section class="card-area">
+        <div class="card-container">
+          <button class="card-detail-btn" data-dom-id="go-word-detail" aria-label="单词详情">
+            <i data-lucide="more-horizontal"></i><span>详情</span>
+          </button>
+          <button class="card-tap" data-dom-id="card-tap-flip" aria-label="翻转卡片">
+            <div class="card-word-group">
+              <div class="card-word">abandon</div>
+              <div class="card-phonetic">/əˈbændən/</div>
+            </div>
+            <div class="flip-hint">
+              <i data-lucide="rotate-cw"></i><span>点击翻转</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- Bottom Action Bar -->
+      <footer class="bottom-action-bar">
+        <div class="bottom-action-bar__left">
+          <button class="icon-btn" data-dom-id="audio-btn" aria-label="Play audio">
+            <i data-lucide="volume-2"></i>
+          </button>
+          <button class="icon-btn" data-dom-id="flip-to-back" aria-label="Flip card">
+            <i data-lucide="rotate-cw"></i>
+          </button>
+          <button class="icon-btn" data-dom-id="tags-btn" aria-label="Tags">
+            <i data-lucide="tag"></i>
+          </button>
+        </div>
+        <div class="bottom-action-bar__right">
+          <button class="rating-btn rating-btn--1" data-dom-id="rating-1" aria-label="Rate 1">1</button>
+          <button class="rating-btn rating-btn--2" data-dom-id="rating-2" aria-label="Rate 2">2</button>
+          <button class="rating-btn rating-btn--3" data-dom-id="rating-3" aria-label="Rate 3">3</button>
+          <button class="rating-btn rating-btn--4" data-dom-id="rating-4" aria-label="Rate 4">4</button>
+          <button class="rating-btn rating-btn--5" data-dom-id="rating-5" aria-label="Rate 5">5</button>
+        </div>
+      </footer>
+    </div>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

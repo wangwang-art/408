@@ -1,0 +1,14 @@
+# 构建产物 / 安装包
+*.apk
+
+# 生成过程中间产物（不入库）
+.preflight/
+generation-tree.json
+runtime-dispatch-manifest.json
+runtime-orchestration-summary.json
+validation-report.json
+*.design
+
+# 系统文件
+.DS_Store
+Thumbs.db

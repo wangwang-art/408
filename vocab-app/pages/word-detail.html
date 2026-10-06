@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词详情</title>
+    <style id="theme-vars">
+/* ============================================================
+   Vocab App — Brand CSS
+   Design Language: Modern Minimalist + Light Skeuomorphic Cards
+   ============================================================ */
+
+/* ---------- Design Tokens (Light Mode) ---------- */
+:root {
+  /* Brand Primary — 沉稳蓝 #4A90D9 */
+  --vocab-primary: #4A90D9;
+  --vocab-primary-hover: #3A7BC8;
+  --vocab-primary-active: #2E6AB0;
+  --vocab-primary-light: #E8F1FB;
+  --vocab-primary-lighter: #F4F8FC;
+  --vocab-primary-foreground: #FFFFFF;
+
+  /* Neutral Scale */
+  --vocab-background: #F8F9FA;
+  --vocab-foreground: #2C3E50;
+  --vocab-card: #FFFFFF;
+  --vocab-card-foreground: #2C3E50;
+  --vocab-muted: #F0F2F5;
+  --vocab-muted-foreground: #7F8C8D;
+  --vocab-border: #E4E7EA;
+  --vocab-input: #E4E7EA;
+  --vocab-ring: #4A90D9;
+  --vocab-popover: #FFFFFF;
+  --vocab-popover-foreground: #2C3E50;
+
+  /* State Colors */
+  --state-success: #7ED321;
+  --state-success-light: #F0FAE6;
+  --state-warning: #F5A623;
+  --state-warning-light: #FEF5E7;
+  --state-error: #E74C3C;
+  --state-error-light: #FDECEA;
+  --state-info: #4A90D9;
+  --state-info-light: #E8F1FB;
+
+  /* Rating Scale Colors */
+  --rating-1: #E74C3C;
+  --rating-2: #F5A623;
+  --rating-3: #F1C40F;
+  --rating-4: #A8D88A;
+  --rating-5: #7ED321;
+
+  /* Radius */
+  --vocab-radius-small: 4px;
+  --vocab-radius-medium: 12px;
+  --vocab-radius-large: 16px;
+  --vocab-radius-full: 9999px;
+
+  /* Shadow — 仅卡片: #000 opacity 0.05, offset y:2, radius 8 */
+  --vocab-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --vocab-shadow-float: 0 8px 24px -8px rgba(0, 0, 0, 0.12);
+  --vocab-shadow-overlay: 0 24px 60px -20px rgba(0, 0, 0, 0.20);
+
+  /* Typography */
+  --vocab-font-sans: "Inter", -apple-system, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+  --vocab-font-mono: "SF Mono", "Cascadia Code", "JetBrains Mono", "Roboto Mono", Consolas, monospace;
+
+  /* Spacing (8pt grid) */
+  --vocab-space-1: 4px;
+  --vocab-space-2: 8px;
+  --vocab-space-3: 12px;
+  --vocab-space-4: 16px;
+  --vocab-space-5: 24px;
+  --vocab-space-6: 32px;
+  --vocab-space-7: 48px;
+
+  /* Motion */
+  --vocab-ease-out: cubic-bezier(0.3, 0, 0, 1);
+  --vocab-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --vocab-duration-fast: 160ms;
+  --vocab-duration-normal: 300ms;
+  --vocab-duration-slow: 480ms;
+}
+
+/* ---------- Design Tokens (Dark Mode) ---------- */
+.dark {
+  --vocab-primary: #5B9FDF;
+  --vocab-primary-hover: #6DABE5;
+  --vocab-primary-active: #4A90D9;
+  --vocab-primary-light: #1E2D40;
+  --vocab-primary-lighter: #161E2C;
+  --vocab-primary-foreground: #FFFFFF;
+
+  --vocab-background: #14141A;
+  --vocab-foreground: #E8E9EC;
+  --vocab-card: #1E1E26;
+  --vocab-card-foreground: #E8E9EC;
+  --vocab-muted: #28282F;
+  --vocab-muted-foreground: #9CA3AF;
+  --vocab-border: #2E2E38;
+  --vocab-input: #2E2E38;
+  --vocab-ring: #5B9FDF;
+  --vocab-popover: #1E1E26;
+  --vocab-popover-foreground: #E8E9EC;
+
+  --state-success: #7ED321;
+  --state-success-light: #1A2E0D;
+  --state-warning: #F5A623;
+  --state-warning-light: #2E2210;
+  --state-error: #E74C3C;
+  --state-error-light: #2E1512;
+  --state-info: #5B9FDF;
+  --state-info-light: #1E2D40;
+
+  --rating-1: #E74C3C;
+  --rating-2: #F5A623;
+  --rating-3: #F1C40F;
+  --rating-4: #A8D88A;
+  --rating-5: #7ED321;
+
+  --vocab-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --vocab-shadow-float: 0 8px 24px -8px rgba(0, 0, 0, 0.40);
+  --vocab-shadow-overlay: 0 24px 60px -20px rgba(0, 0, 0, 0.55);
+}
+
+/* ---------- Typography Classes ---------- */
+.vocab-display {
+  font-family: var(--vocab-font-sans);
+  font-size: clamp(32px, 8vw, 40px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--vocab-foreground);
+}
+
+.vocab-h1 {
+  font-family: var(--vocab-font-sans);
+  font-size: clamp(24px, 6vw, 28px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--vocab-foreground);
+}
+
+.vocab-h2 {
+  font-family: var(--vocab-font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--vocab-foreground);
+}
+
+.vocab-h3 {
+  font-family: var(--vocab-font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--vocab-foreground);
+}
+
+.vocab-body {
+  font-family: var(--vocab-font-sans);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--vocab-foreground);
+}
+
+.vocab-body-sm {
+  font-family: var(--vocab-font-sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--vocab-muted-foreground);
+}
+
+.vocab-caption {
+  font-family: var(--vocab-font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--vocab-muted-foreground);
+}
+
+.vocab-mono {
+  font-family: var(--vocab-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vocab-foreground);
+}
+
+.vocab-phonetic {
+  font-family: var(--vocab-font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--vocab-muted-foreground);
+  font-style: italic;
+}
+
+.vocab-word-large {
+  font-family: var(--vocab-font-sans);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--vocab-foreground);
+}
+
+.vocab-phonetic-sm {
+  font-family: var(--vocab-font-mono);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--vocab-muted-foreground);
+}
+
+/* ---------- Utility Token Aliases for Tailwind Semantic Bridge ---------- */
+/* These aliases allow Tailwind semantic classes (bg-primary, text-muted-foreground, etc.) to resolve correctly */
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--vocab-background);
+    --color-foreground: var(--vocab-foreground);
+    --color-card: var(--vocab-card);
+    --color-card-foreground: var(--vocab-card-foreground);
+    --color-popover: var(--vocab-popover);
+    --color-popover-foreground: var(--vocab-popover-foreground);
+    --color-primary: var(--vocab-primary);
+    --color-primary-foreground: var(--vocab-primary-foreground);
+    --color-muted: var(--vocab-muted);
+    --color-muted-foreground: var(--vocab-muted-foreground);
+    --color-border: var(--vocab-border);
+    --color-input: var(--vocab-input);
+    --color-ring: var(--vocab-ring);
+    --radius-sm: var(--vocab-radius-small);
+    --radius-md: var(--vocab-radius-medium);
+    --radius-lg: var(--vocab-radius-large);
+  }
+  @layer base {
+    body { background: var(--vocab-background); color: var(--vocab-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--vocab-background); }
+      .text-background { color: var(--vocab-background); }
+      .border-background { border-color: var(--vocab-background); }
+      .ring-background { --tw-ring-color: var(--vocab-background); }
+      .bg-foreground { background-color: var(--vocab-foreground); }
+      .text-foreground { color: var(--vocab-foreground); }
+      .border-foreground { border-color: var(--vocab-foreground); }
+      .ring-foreground { --tw-ring-color: var(--vocab-foreground); }
+      .bg-card { background-color: var(--vocab-card); }
+      .text-card { color: var(--vocab-card); }
+      .border-card { border-color: var(--vocab-card); }
+      .ring-card { --tw-ring-color: var(--vocab-card); }
+      .bg-card-foreground { background-color: var(--vocab-card-foreground); }
+      .text-card-foreground { color: var(--vocab-card-foreground); }
+      .border-card-foreground { border-color: var(--vocab-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--vocab-card-foreground); }
+      .bg-popover { background-color: var(--vocab-popover); }
+      .text-popover { color: var(--vocab-popover); }
+      .border-popover { border-color: var(--vocab-popover); }
+      .ring-popover { --tw-ring-color: var(--vocab-popover); }
+      .bg-popover-foreground { background-color: var(--vocab-popover-foreground); }
+      .text-popover-foreground { color: var(--vocab-popover-foreground); }
+      .border-popover-foreground { border-color: var(--vocab-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--vocab-popover-foreground); }
+      .bg-primary { background-color: var(--vocab-primary); }
+      .text-primary { color: var(--vocab-primary); }
+      .border-primary { border-color: var(--vocab-primary); }
+      .ring-primary { --tw-ring-color: var(--vocab-primary); }
+      .bg-primary-foreground { background-color: var(--vocab-primary-foreground); }
+      .text-primary-foreground { color: var(--vocab-primary-foreground); }
+      .border-primary-foreground { border-color: var(--vocab-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--vocab-primary-foreground); }
+      .bg-muted { background-color: var(--vocab-muted); }
+      .text-muted { color: var(--vocab-muted); }
+      .border-muted { border-color: var(--vocab-muted); }
+      .ring-muted { --tw-ring-color: var(--vocab-muted); }
+      .bg-muted-foreground { background-color: var(--vocab-muted-foreground); }
+      .text-muted-foreground { color: var(--vocab-muted-foreground); }
+      .border-muted-foreground { border-color: var(--vocab-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--vocab-muted-foreground); }
+      .bg-border { background-color: var(--vocab-border); }
+      .text-border { color: var(--vocab-border); }
+      .border-border { border-color: var(--vocab-border); }
+      .ring-border { --tw-ring-color: var(--vocab-border); }
+      .bg-input { background-color: var(--vocab-input); }
+      .text-input { color: var(--vocab-input); }
+      .border-input { border-color: var(--vocab-input); }
+      .ring-input { --tw-ring-color: var(--vocab-input); }
+      .bg-ring { background-color: var(--vocab-ring); }
+      .text-ring { color: var(--vocab-ring); }
+      .border-ring { border-color: var(--vocab-ring); }
+      .ring-ring { --tw-ring-color: var(--vocab-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main>
+      <style id="critical-layout">
+        /* ---------- Mobile frame ---------- */
+        .detail-container {
+          max-width: 430px;
+          margin: 0 auto;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          background: var(--vocab-background);
+          font-family: var(--vocab-font-sans);
+          color: var(--vocab-foreground);
+        }
+
+        /* ---------- Status Bar (44px) ---------- */
+        .status-bar {
+          height: 44px;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 20px;
+          background: var(--vocab-card);
+        }
+        .status-bar .time {
+          font-size: 15px;
+          font-weight: 600;
+          color: var(--vocab-foreground);
+          font-variant-numeric: tabular-nums;
+          letter-spacing: -0.01em;
+        }
+        .status-icons {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+          color: var(--vocab-foreground);
+        }
+        .status-icons svg { display: block; }
+
+        /* ---------- Header ---------- */
+        .header {
+          height: 56px;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 12px;
+          background: var(--vocab-card);
+          border-bottom: 1px solid var(--vocab-border);
+        }
+        .header .icon-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 44px;
+          height: 44px;
+          border: none;
+          background: transparent;
+          color: var(--vocab-foreground);
+          border-radius: var(--vocab-radius-medium);
+          cursor: pointer;
+          transition: background-color var(--vocab-duration-fast) var(--vocab-ease-out),
+                      transform var(--vocab-duration-fast) var(--vocab-ease-out);
+        }
+        .header .icon-btn:hover { background: var(--vocab-muted); }
+        .header .icon-btn:active { background: var(--vocab-muted); transform: scale(0.94); }
+        .header .icon-btn svg { display: block; }
+        .header .back-btn svg { width: 24px; height: 24px; }
+        .header .audio-btn svg { width: 22px; height: 22px; }
+        .header .word-title {
+          font-family: var(--vocab-font-mono);
+          font-size: 18px;
+          font-weight: 600;
+          color: var(--vocab-foreground);
+          letter-spacing: -0.01em;
+        }
+
+        /* ---------- Content area ---------- */
+        .content-area {
+          flex: 1;
+          padding: 0 16px 16px;
+        }
+
+        /* ---------- Card base ---------- */
+        .card {
+          background: var(--vocab-card);
+          border-radius: var(--vocab-radius-large);
+          box-shadow: var(--vocab-shadow-card);
+          padding: 24px;
+          margin-top: 16px;
+        }
+        .card.compact { padding: 20px; }
+
+        /* ---------- Word Info ---------- */
+        .word-info .word {
+          margin: 0;
+          font-family: var(--vocab-font-sans);
+          font-size: 32px;
+          font-weight: 700;
+          line-height: 1.15;
+          letter-spacing: -0.01em;
+          color: var(--vocab-foreground);
+        }
+        .word-info .phonetic {
+          margin: 6px 0 0;
+          font-family: var(--vocab-font-mono);
+          font-size: 16px;
+          font-style: italic;
+          color: var(--vocab-muted-foreground);
+        }
+        .word-info .divider {
+          border: none;
+          height: 1px;
+          background: var(--vocab-border);
+          margin: 16px 0;
+        }
+        .word-type-tag {
+          display: inline-flex;
+          align-items: center;
+          height: 22px;
+          padding: 2px 10px;
+          border-radius: var(--vocab-radius-full);
+          background: var(--vocab-primary-light);
+          color: var(--vocab-primary);
+          font-size: 12px;
+          font-weight: 600;
+          line-height: 1;
+        }
+        .word-info .definition {
+          margin: 12px 0 0;
+          font-size: 18px;
+          font-weight: 500;
+          line-height: 1.6;
+          color: var(--vocab-foreground);
+        }
+        .word-info .example {
+          margin: 16px 0 0;
+          font-size: 14px;
+          font-style: italic;
+          color: var(--vocab-muted-foreground);
+          line-height: 1.6;
+          border-left: 3px solid var(--vocab-primary-light);
+          padding-left: 12px;
+        }
+
+        /* ---------- Section title ---------- */
+        .section-title {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin: 0 0 16px;
+          font-size: 16px;
+          font-weight: 600;
+          color: var(--vocab-foreground);
+        }
+        .section-title svg {
+          width: 18px;
+          height: 18px;
+          color: var(--vocab-primary);
+          flex-shrink: 0;
+        }
+
+        /* ---------- Tag editing ---------- */
+        .tag-list {
+          display: flex;
+          gap: 8px;
+          overflow-x: auto;
+          padding: 2px 2px 4px;
+        }
+        .tag-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          height: 28px;
+          padding: 4px 12px;
+          border-radius: var(--vocab-radius-full);
+          font-size: 13px;
+          font-weight: 500;
+          line-height: 1;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .tag-item.primary { background: var(--vocab-primary-light); color: var(--vocab-primary); }
+        .tag-item.success { background: var(--state-success-light); color: var(--state-success); }
+        .tag-item.error { background: var(--state-error-light); color: var(--state-error); }
+        .tag-item .remove-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 18px;
+          height: 18px;
+          margin: 0;
+          padding: 0;
+          border: none;
+          background: transparent;
+          color: inherit;
+          cursor: pointer;
+          border-radius: 50%;
+          opacity: 0.65;
+          transition: opacity var(--vocab-duration-fast) var(--vocab-ease-out);
+        }
+        .tag-item .remove-btn:hover { opacity: 1; }
+        .tag-item .remove-btn svg { width: 14px; height: 14px; display: block; }
+
+        .tag-input-wrap { position: relative; margin-top: 16px; }
+        .tag-input {
+          width: 100%;
+          height: 36px;
+          box-sizing: border-box;
+          border: 1px solid var(--vocab-border);
+          border-radius: var(--vocab-radius-medium);
+          padding: 0 44px 0 12px;
+          font-size: 14px;
+          font-family: var(--vocab-font-sans);
+          color: var(--vocab-foreground);
+          background: var(--vocab-card);
+          outline: none;
+          transition: border-color var(--vocab-duration-fast) var(--vocab-ease-out),
+                      box-shadow var(--vocab-duration-fast) var(--vocab-ease-out);
+        }
+        .tag-input::placeholder { color: var(--vocab-muted-foreground); }
+        .tag-input:focus {
+          border-color: var(--vocab-primary);
+          box-shadow: 0 0 0 3px var(--vocab-primary-light);
+        }
+        .tag-add-btn {
+          position: absolute;
+          right: 6px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 28px;
+          height: 28px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          background: var(--vocab-primary);
+          color: var(--vocab-primary-foreground);
+          border-radius: var(--vocab-radius-medium);
+          cursor: pointer;
+          transition: background-color var(--vocab-duration-fast) var(--vocab-ease-out),
+                      transform var(--vocab-duration-fast) var(--vocab-ease-out);
+        }
+        .tag-add-btn:hover { background: var(--vocab-primary-hover); }
+        .tag-add-btn:active { background: var(--vocab-primary-active); transform: translateY(-50%) scale(0.92); }
+        .tag-add-btn svg { width: 18px; height: 18px; display: block; }
+
+        /* ---------- Familiarity ---------- */
+        .familiarity .value-display {
+          text-align: center;
+          font-family: var(--vocab-font-mono);
+          font-size: 28px;
+          font-weight: 700;
+          line-height: 1;
+          color: var(--rating-3);
+          margin-bottom: 18px;
+          font-variant-numeric: tabular-nums;
+          transition: color var(--vocab-duration-fast) var(--vocab-ease-out);
+        }
+        .slider-wrap { padding: 0 6px; }
+        .familiarity-slider {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 100%;
+          height: 6px;
+          border-radius: 3px;
+          background: linear-gradient(to right,
+            var(--rating-1), var(--rating-2), var(--rating-3), var(--rating-4), var(--rating-5));
+          outline: none;
+          cursor: pointer;
+          margin: 0;
+        }
+        .familiarity-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: var(--vocab-card);
+          border: 2px solid var(--vocab-primary);
+          box-shadow: var(--vocab-shadow-card);
+          cursor: pointer;
+          transition: transform var(--vocab-duration-fast) var(--vocab-ease-out);
+        }
+        .familiarity-slider::-webkit-slider-thumb:active { transform: scale(1.18); }
+        .familiarity-slider::-moz-range-thumb {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: var(--vocab-card);
+          border: 2px solid var(--vocab-primary);
+          box-shadow: var(--vocab-shadow-card);
+          cursor: pointer;
+        }
+        .familiarity-slider:focus-visible {
+          box-shadow: 0 0 0 4px var(--vocab-primary-light);
+        }
+        .slider-labels {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 14px;
+          font-size: 11px;
+          color: var(--vocab-muted-foreground);
+        }
+        .slider-labels span { flex: 1; text-align: center; }
+
+        /* ---------- Timeline ---------- */
+        .timeline-list { display: flex; flex-direction: column; }
+        .timeline-item {
+          display: flex;
+          gap: 12px;
+          min-height: 48px;
+          padding: 4px 0;
+        }
+        .timeline-marker {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          flex-shrink: 0;
+          width: 12px;
+          padding-top: 6px;
+        }
+        .timeline-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+        .timeline-dot.r1 { background: var(--rating-1); }
+        .timeline-dot.r2 { background: var(--rating-2); }
+        .timeline-dot.r3 { background: var(--rating-3); }
+        .timeline-dot.r4 { background: var(--rating-4); }
+        .timeline-dot.r5 { background: var(--rating-5); }
+        .timeline-line {
+          flex: 1;
+          width: 1px;
+          min-height: 20px;
+          background: var(--vocab-border);
+          margin-top: 4px;
+        }
+        .timeline-item:last-child .timeline-line { display: none; }
+        .timeline-content {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          padding-bottom: 12px;
+        }
+        .timeline-item:last-child .timeline-content { padding-bottom: 0; }
+        .timeline-date {
+          font-family: var(--vocab-font-mono);
+          font-size: 13px;
+          color: var(--vocab-muted-foreground);
+          font-variant-numeric: tabular-nums;
+        }
+        .timeline-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .timeline-score {
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--vocab-foreground);
+        }
+        .timeline-tag {
+          display: inline-flex;
+          align-items: center;
+          height: 22px;
+          padding: 2px 10px;
+          border-radius: var(--vocab-radius-full);
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 1;
+        }
+        .timeline-tag.success { background: var(--state-success-light); color: var(--state-success); }
+        .timeline-tag.warning { background: var(--state-warning-light); color: var(--state-warning); }
+        .timeline-tag.error { background: var(--state-error-light); color: var(--state-error); }
+
+        /* ---------- Bottom action bar ---------- */
+        .bottom-bar {
+          position: sticky;
+          bottom: 0;
+          z-index: 20;
+          display: flex;
+          gap: 12px;
+          padding: 16px;
+          background: var(--vocab-card);
+          border-top: 1px solid var(--vocab-border);
+        }
+        .bottom-bar .btn {
+          flex: 1;
+          height: 48px;
+          border-radius: var(--vocab-radius-medium);
+          font-size: 15px;
+          font-family: var(--vocab-font-sans);
+          cursor: pointer;
+          transition: background-color var(--vocab-duration-fast) var(--vocab-ease-out),
+                      transform var(--vocab-duration-fast) var(--vocab-ease-out),
+                      border-color var(--vocab-duration-fast) var(--vocab-ease-out);
+        }
+        .bottom-bar .btn-secondary {
+          background: transparent;
+          border: 1px solid var(--vocab-border);
+          color: var(--vocab-muted-foreground);
+        }
+        .bottom-bar .btn-secondary:hover { background: var(--vocab-muted); }
+        .bottom-bar .btn-secondary:active { transform: scale(0.98); }
+        .bottom-bar .btn-primary {
+          background: var(--vocab-primary);
+          border: 1px solid var(--vocab-primary);
+          color: var(--vocab-primary-foreground);
+          font-weight: 600;
+        }
+        .bottom-bar .btn-primary:hover { background: var(--vocab-primary-hover); }
+        .bottom-bar .btn-primary:active { background: var(--vocab-primary-active); transform: scale(0.98); }
+
+        /* ---------- Focus & a11y ---------- */
+        button:focus-visible, input:focus-visible {
+          outline: 2px solid var(--vocab-primary);
+          outline-offset: 2px;
+        }
+
+        /* ---------- Reduced motion ---------- */
+        @media (prefers-reduced-motion: reduce) {
+          * {
+            transition-duration: 0.01ms !important;
+            animation-duration: 0.01ms !important;
+          }
+        }
+      </style>
+
+      <div class="detail-container">
+        <!-- Status Bar Mock -->
+        <div class="status-bar" aria-hidden="true">
+          <span class="time">9:41</span>
+          <div class="status-icons">
+            <svg width="17" height="12" viewBox="0 0 18 12" fill="currentColor" aria-hidden="true"><rect x="0" y="8" width="3" height="4" rx="0.5"/><rect x="5" y="5" width="3" height="7" rx="0.5"/><rect x="10" y="2.5" width="3" height="9.5" rx="0.5"/><rect x="15" y="0" width="3" height="12" rx="0.5"/></svg>
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M1 4.2a10.5 10.5 0 0 1 14 0"/><path d="M3.4 6.8a6.8 6.8 0 0 1 9.2 0"/><path d="M5.8 9.4a3.2 3.2 0 0 1 4.4 0"/><circle cx="8" cy="11.4" r="0.4" fill="currentColor" stroke="none"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="none" aria-hidden="true"><rect x="0.5" y="0.5" width="21" height="11" rx="2.5" stroke="currentColor" stroke-opacity="0.4"/><rect x="2.5" y="2.5" width="17" height="7" rx="1" fill="currentColor"/><rect x="23" y="3.5" width="1.5" height="5" rx="0.5" fill="currentColor" fill-opacity="0.4"/></svg>
+          </div>
+        </div>
+
+        <!-- Header -->
+        <header class="header">
+          <button class="icon-btn back-btn" data-dom-id="back-to-review" aria-label="返回复习">
+            <i data-lucide="chevron-left"></i>
+          </button>
+          <span class="word-title">abandon</span>
+          <button class="icon-btn audio-btn" data-dom-id="detail-audio" aria-label="播放发音">
+            <i data-lucide="volume-2"></i>
+          </button>
+        </header>
+
+        <!-- Content -->
+        <div class="content-area">
+          <!-- Word Info Card -->
+          <section class="card word-info">
+            <h1 class="word">abandon</h1>
+            <p class="phonetic">/əˈbændən/</p>
+            <hr class="divider">
+            <span class="word-type-tag">v.</span>
+            <p class="definition">放弃；遗弃；抛弃</p>
+            <p class="example">He abandoned his car on the highway.</p>
+          </section>
+
+          <!-- Tag Editing -->
+          <section class="card compact tag-section">
+            <h2 class="section-title"><i data-lucide="tag"></i>标签管理</h2>
+            <div class="tag-list no-scrollbar" role="list">
+              <span class="tag-item primary" role="listitem">高频词<button class="remove-btn" aria-label="移除标签 高频词"><i data-lucide="x"></i></button></span>
+              <span class="tag-item primary" role="listitem">动词<button class="remove-btn" aria-label="移除标签 动词"><i data-lucide="x"></i></button></span>
+              <span class="tag-item success" role="listitem">已掌握<button class="remove-btn" aria-label="移除标签 已掌握"><i data-lucide="x"></i></button></span>
+              <span class="tag-item error" role="listitem">难词<button class="remove-btn" aria-label="移除标签 难词"><i data-lucide="x"></i></button></span>
+            </div>
+            <div class="tag-input-wrap">
+              <input class="tag-input" type="text" placeholder="添加新标签..." aria-label="添加新标签">
+              <button class="tag-add-btn" aria-label="添加标签"><i data-lucide="plus"></i></button>
+            </div>
+          </section>
+
+          <!-- Familiarity -->
+          <section class="card compact familiarity">
+            <h2 class="section-title"><i data-lucide="gauge"></i>熟悉度</h2>
+            <div class="value-display">3</div>
+            <div class="slider-wrap">
+              <input type="range" min="1" max="5" value="3" step="1" class="familiarity-slider" aria-label="熟悉度评分">
+              <div class="slider-labels" aria-hidden="true">
+                <span>1 生疏</span>
+                <span>2</span>
+                <span>3 一般</span>
+                <span>4</span>
+                <span>5 熟练</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Review History Timeline -->
+          <section class="card compact timeline">
+            <h2 class="section-title"><i data-lucide="history"></i>复习历史</h2>
+            <div class="timeline-list">
+              <div class="timeline-item">
+                <div class="timeline-marker">
+                  <span class="timeline-dot r4"></span>
+                  <span class="timeline-line"></span>
+                </div>
+                <div class="timeline-content">
+                  <span class="timeline-date">2024-08-07</span>
+                  <div class="timeline-row">
+                    <span class="timeline-score">评分: 4</span>
+                    <span class="timeline-tag success">正确</span>
+                  </div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-marker">
+                  <span class="timeline-dot r3"></span>
+                  <span class="timeline-line"></span>
+                </div>
+                <div class="timeline-content">
+                  <span class="timeline-date">2024-08-05</span>
+                  <div class="timeline-row">
+                    <span class="timeline-score">评分: 3</span>
+                    <span class="timeline-tag warning">一般</span>
+                  </div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-marker">
+                  <span class="timeline-dot r2"></span>
+                  <span class="timeline-line"></span>
+                </div>
+                <div class="timeline-content">
+                  <span class="timeline-date">2024-08-03</span>
+                  <div class="timeline-row">
+                    <span class="timeline-score">评分: 2</span>
+                    <span class="timeline-tag error">需加强</span>
+                  </div>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-marker">
+                  <span class="timeline-dot r1"></span>
+                  <span class="timeline-line"></span>
+                </div>
+                <div class="timeline-content">
+                  <span class="timeline-date">2024-08-01</span>
+                  <div class="timeline-row">
+                    <span class="timeline-score">评分: 1</span>
+                    <span class="timeline-tag error">生疏</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Bottom Action Bar -->
+        <div class="bottom-bar">
+          <button class="btn btn-secondary" data-dom-id="reset-progress">重置进度</button>
+          <button class="btn btn-primary" data-dom-id="save-word">保存</button>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          var slider = document.querySelector('.familiarity-slider');
+          var display = document.querySelector('.familiarity .value-display');
+          if (!slider || !display) return;
+          function update() {
+            var v = slider.value;
+            display.textContent = v;
+            display.style.color = 'var(--rating-' + v + ')';
+          }
+          slider.addEventListener('input', update);
+        })();
+      </script>
+    </main>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

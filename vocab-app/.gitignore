@@ -1,0 +1,26 @@
+# Node / Expo
+node_modules/
+.expo/
+dist/
+web-build/
+.preflight/
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# 音频缓存（运行时生成，不入库）
+assets/audio/*
+!assets/audio/.gitkeep
+
+# 原生构建产物
+android/
+ios/
+# APK / 安装包（构建产物，不入库）
+*.apk
+# 生成的二维码图片
+qr-code.png
+
+# 系统文件
+.DS_Store
+Thumbs.db

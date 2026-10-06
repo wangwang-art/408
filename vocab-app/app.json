@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "VocabApp",
+    "slug": "vocab-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#4A90D9"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.vocabapp.learner"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#4A90D9"
+      },
+      "package": "com.vocabapp.learner"
+    },
+    "plugins": [
+      "expo-sqlite",
+      "expo-av",
+      "expo-file-system",
+      "expo-asset",
+      "expo-font"
+    ]
+  }
+}

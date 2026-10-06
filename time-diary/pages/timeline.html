@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时间轴</title>
+    <style id="theme-vars">
+/* ============================================================
+   时间日记 · 二次元风格设计令牌 (Design Tokens)
+   风格基调：奶油暖底 + 蜜桃珊瑚主色 + 樱花粉点缀
+   参考「爱时间」的信息架构 × 二次元轻量插画氛围
+   ============================================================ */
+
+:root {
+  /* ---------- 品牌主色（单一主色相：蜜桃珊瑚） ---------- */
+  --diary-primary: #ff8a7a;            /* 品牌主色：蜜桃珊瑚 */
+  --diary-primary-strong: #f97a68;     /* 主色深一档（按压态） */
+  --diary-primary-soft: #fff0ec;       /* 主色 8% 浅底（选中/标签底） */
+  --diary-primary-tint: #ffe4dc;       /* 主色浅色阶（进度条底） */
+  --diary-primary-ink: #ffffff;        /* 主色上的文字 */
+
+  /* ---------- 中性色（暖灰奶油系） ---------- */
+  --diary-background: #fffaf7;         /* 页面底：奶油白 */
+  --diary-surface: #ffffff;            /* 卡片面 */
+  --diary-surface-2: #fff3ee;          /* 次级面 / 悬停 */
+  --diary-foreground: #4a3530;         /* 主文字：暖深棕 */
+  --diary-muted: #fff1ec;              /* 弱化面 */
+  --diary-muted-foreground: #a08a82;   /* 弱化文字 */
+  --diary-border: #f6e3dc;             /* 分隔线 / 描边 */
+  --diary-input: #f6e3dc;              /* 输入框描边 */
+  --diary-ring: rgba(255, 138, 122, 0.35); /* 聚焦环 */
+
+  /* ---------- 语义别名（head 契约必需映射） ---------- */
+  --diary-card: var(--diary-surface);
+  --diary-card-foreground: var(--diary-foreground);
+  --diary-popover: var(--diary-surface);
+  --diary-popover-foreground: var(--diary-foreground);
+  --diary-primary-foreground: var(--diary-primary-ink);
+
+  /* ---------- 语义状态色（仅用于状态） ---------- */
+  --state-success: #7bc8a4;
+  --state-warning: #f2b86b;
+  --state-error: #ef7d78;
+  --state-info: #7fb5d9;
+
+  /* ---------- 排版 ---------- */
+  --diary-font-primary: "Inter", "HarmonyOS Sans SC", "PingFang SC", "MiSans", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+  --diary-font-display: "Inter", "HarmonyOS Sans SC", "PingFang SC", "MiSans", "Noto Sans SC", system-ui, sans-serif;
+
+  /* ---------- 圆角（二次元柔和风格，卡片最大 20px） ---------- */
+  --diary-radius-small: 4px;
+  --diary-radius-medium: 12px;
+  --diary-radius-large: 20px;
+  --diary-radius-full: 9999px;
+
+  /* ---------- 阴影（静态面极浅，浮层可更深） ---------- */
+  --diary-shadow-1: 0 1px 2px rgba(143, 74, 58, 0.05), 0 1px 1px rgba(143, 74, 58, 0.03);
+  --diary-shadow-2: 0 8px 24px -8px rgba(143, 74, 58, 0.18);
+  --diary-shadow-3: 0 24px 60px -20px rgba(143, 74, 58, 0.30);
+}
+
+/* ---------- 暗色模式（午夜暖棕） ---------- */
+.dark {
+  --diary-primary: #ff9a8c;
+  --diary-primary-strong: #ffab9e;
+  --diary-primary-soft: rgba(255, 154, 140, 0.16);
+  --diary-primary-tint: rgba(255, 154, 140, 0.10);
+  --diary-primary-ink: #3a2119;
+
+  --diary-background: #1c1513;
+  --diary-surface: #251d1a;
+  --diary-surface-2: #2e2420;
+  --diary-foreground: #f3e8e2;
+  --diary-muted: #2e2420;
+  --diary-muted-foreground: #a8948a;
+  --diary-border: #3a2c27;
+  --diary-input: #3a2c27;
+  --diary-ring: rgba(255, 154, 140, 0.40);
+
+  --diary-card: var(--diary-surface);
+  --diary-card-foreground: var(--diary-foreground);
+  --diary-popover: var(--diary-surface);
+  --diary-popover-foreground: var(--diary-foreground);
+  --diary-primary-foreground: var(--diary-primary-ink);
+
+  --diary-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --diary-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --diary-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+}
+
+/* ============================================================
+   排版类（Typography Classes）
+   ============================================================ */
+.diary-display {
+  font-family: var(--diary-font-display);
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--diary-foreground);
+  text-wrap: balance;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.diary-h1 {
+  font-family: var(--diary-font-display);
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--diary-foreground);
+  text-wrap: balance;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.diary-h2 {
+  font-family: var(--diary-font-display);
+  font-size: clamp(20px, 2.6vw, 28px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--diary-foreground);
+}
+.diary-h3 {
+  font-family: var(--diary-font-display);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--diary-foreground);
+}
+.diary-body {
+  font-family: var(--diary-font-primary);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--diary-foreground);
+}
+.diary-body-large {
+  font-family: var(--diary-font-primary);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--diary-foreground);
+}
+.diary-caption {
+  font-family: var(--diary-font-primary);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+  color: var(--diary-muted-foreground);
+}
+.diary-num {
+  font-family: var(--diary-font-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   通用组件基类（二次元风格统一语言）
+   ============================================================ */
+.diary-card {
+  background: var(--diary-surface);
+  border: 1px solid var(--diary-border);
+  border-radius: var(--diary-radius-large);
+  box-shadow: var(--diary-shadow-1);
+}
+.diary-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--diary-radius-full);
+  background: var(--diary-surface-2);
+  color: var(--diary-foreground);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.diary-chip-primary {
+  background: var(--diary-primary-soft);
+  color: var(--diary-primary-strong);
+}
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--diary-background);
+    --color-foreground: var(--diary-foreground);
+    --color-card: var(--diary-card);
+    --color-card-foreground: var(--diary-card-foreground);
+    --color-popover: var(--diary-popover);
+    --color-popover-foreground: var(--diary-popover-foreground);
+    --color-primary: var(--diary-primary);
+    --color-primary-foreground: var(--diary-primary-foreground);
+    --color-muted: var(--diary-muted);
+    --color-muted-foreground: var(--diary-muted-foreground);
+    --color-border: var(--diary-border);
+    --color-input: var(--diary-input);
+    --color-ring: var(--diary-ring);
+    --radius-sm: var(--diary-radius-small);
+    --radius-md: var(--diary-radius-medium);
+    --radius-lg: var(--diary-radius-large);
+  }
+  @layer base {
+    body { background: var(--diary-background); color: var(--diary-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--diary-background); }
+      .text-background { color: var(--diary-background); }
+      .border-background { border-color: var(--diary-background); }
+      .ring-background { --tw-ring-color: var(--diary-background); }
+      .bg-foreground { background-color: var(--diary-foreground); }
+      .text-foreground { color: var(--diary-foreground); }
+      .border-foreground { border-color: var(--diary-foreground); }
+      .ring-foreground { --tw-ring-color: var(--diary-foreground); }
+      .bg-card { background-color: var(--diary-card); }
+      .text-card { color: var(--diary-card); }
+      .border-card { border-color: var(--diary-card); }
+      .ring-card { --tw-ring-color: var(--diary-card); }
+      .bg-card-foreground { background-color: var(--diary-card-foreground); }
+      .text-card-foreground { color: var(--diary-card-foreground); }
+      .border-card-foreground { border-color: var(--diary-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--diary-card-foreground); }
+      .bg-popover { background-color: var(--diary-popover); }
+      .text-popover { color: var(--diary-popover); }
+      .border-popover { border-color: var(--diary-popover); }
+      .ring-popover { --tw-ring-color: var(--diary-popover); }
+      .bg-popover-foreground { background-color: var(--diary-popover-foreground); }
+      .text-popover-foreground { color: var(--diary-popover-foreground); }
+      .border-popover-foreground { border-color: var(--diary-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--diary-popover-foreground); }
+      .bg-primary { background-color: var(--diary-primary); }
+      .text-primary { color: var(--diary-primary); }
+      .border-primary { border-color: var(--diary-primary); }
+      .ring-primary { --tw-ring-color: var(--diary-primary); }
+      .bg-primary-foreground { background-color: var(--diary-primary-foreground); }
+      .text-primary-foreground { color: var(--diary-primary-foreground); }
+      .border-primary-foreground { border-color: var(--diary-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--diary-primary-foreground); }
+      .bg-muted { background-color: var(--diary-muted); }
+      .text-muted { color: var(--diary-muted); }
+      .border-muted { border-color: var(--diary-muted); }
+      .ring-muted { --tw-ring-color: var(--diary-muted); }
+      .bg-muted-foreground { background-color: var(--diary-muted-foreground); }
+      .text-muted-foreground { color: var(--diary-muted-foreground); }
+      .border-muted-foreground { border-color: var(--diary-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--diary-muted-foreground); }
+      .bg-border { background-color: var(--diary-border); }
+      .text-border { color: var(--diary-border); }
+      .border-border { border-color: var(--diary-border); }
+      .ring-border { --tw-ring-color: var(--diary-border); }
+      .bg-input { background-color: var(--diary-input); }
+      .text-input { color: var(--diary-input); }
+      .border-input { border-color: var(--diary-input); }
+      .ring-input { --tw-ring-color: var(--diary-input); }
+      .bg-ring { background-color: var(--diary-ring); }
+      .text-ring { color: var(--diary-ring); }
+      .border-ring { border-color: var(--diary-ring); }
+      .ring-ring { --tw-ring-color: var(--diary-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+    <main class="w-full max-w-md mx-auto px-4 pb-4">
+    <!-- 顶部日期切换 -->
+    <header class="flex items-center justify-between pt-5 pb-4">
+      <button type="button" class="inline-flex h-9 items-center gap-1 rounded-lg px-2 text-[13px] text-[var(--diary-muted-foreground)] transition-colors hover:bg-[var(--diary-surface-2)]" aria-label="前一天">
+        <i data-lucide="chevron-left" class="h-4 w-4"></i>
+        <span class="whitespace-nowrap">前一天</span>
+      </button>
+      <div class="flex items-center gap-2">
+        <h1 class="diary-h3 whitespace-nowrap">8月5日 周三</h1>
+        <button type="button" class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[var(--diary-border)] bg-[var(--diary-surface)] text-[var(--diary-foreground)] transition-transform hover:-translate-y-0.5" aria-label="打开日记">
+          <i data-lucide="book-open" class="h-4 w-4"></i>
+        </button>
+      </div>
+      <button type="button" class="inline-flex h-9 items-center gap-1 rounded-lg px-2 text-[13px] text-[var(--diary-muted-foreground)] transition-colors hover:bg-[var(--diary-surface-2)]" aria-label="后一天">
+        <span class="whitespace-nowrap">后一天</span>
+        <i data-lucide="chevron-right" class="h-4 w-4"></i>
+      </button>
+    </header>
+
+    <!-- 今日概览 -->
+    <section id="today-summary" class="diary-card px-4 py-4">
+      <div class="flex items-center justify-between gap-3">
+        <div class="min-w-0">
+          <p class="diary-caption mb-1">今日已记录</p>
+          <p class="diary-num text-[30px] font-bold leading-none tracking-[-0.02em] text-[var(--diary-foreground)]">22<span class="ml-1 text-[15px] font-medium text-[var(--diary-muted-foreground)]">小时</span></p>
+        </div>
+        <div class="flex shrink-0 items-center gap-2 rounded-xl bg-[var(--diary-primary-soft)] px-3 py-2">
+          <span class="relative flex h-2 w-2">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--diary-primary)] opacity-60"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-[var(--diary-primary)]"></span>
+          </span>
+          <div class="min-w-0 text-right">
+            <p class="whitespace-nowrap text-[13px] font-medium text-[var(--diary-primary-strong)]">进行中：休息</p>
+            <p class="diary-num whitespace-nowrap text-[11px] text-[var(--diary-muted-foreground)]">已 32 分钟</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 24 小时时间轴 -->
+    <section id="timeline-area" class="mt-4">
+      <div class="mb-2 flex items-center justify-between">
+        <h2 class="diary-h3">时间轴</h2>
+        <span class="diary-chip diary-chip-primary">自动补录已开启</span>
+      </div>
+      <div class="diary-card px-3 py-4">
+        <div class="flex gap-2">
+          <!-- 左刻度 -->
+          <div class="flex w-9 shrink-0 flex-col justify-between pb-0.5 pt-0.5">
+            <span class="text-[10px] leading-none text-[var(--diary-muted-foreground)]">00</span>
+            <span class="text-[10px] leading-none text-[var(--diary-muted-foreground)]">02</span>
+            <span class="text-[10px] leading-none text-[var(--diary-muted-foreground)]">04</span>
+            <span class="text-[10px] leading-none text-[var(--diary-muted-foreground)]">06</span>
+            <span class="text-[10px] leading-none text-[var(--diary-muted-foreground)]">08</span>
+            <span class="text-[10px] leading-none text-[var(--diary-muted-foreground)]">10</span>
+            <span class="text-[10px] leading-none text-[var(--diary-muted-foreground)]">12</span>
+            <span class="text-[10px] leading-none text-[var(--diary-muted-foreground)]">14</span>
+            <span class="text-[10px] leading-none text-[var(--diary-muted-foreground)]">16</span>
+            <span class="text-[10px] leading-none text-[var(--diary-muted-foreground)]">18</span>
+            <span class="text-[10px] leading-none text-[var(--diary-muted-foreground)]">20</span>
+            <span class="text-[10px] leading-none text-[var(--diary-muted-foreground)]">22</span>
+          </div>
+          <!-- 右侧色条：flex 流式布局，按分钟数比例分配高度，物理上不会重叠 -->
+          <div class="timeline-bar relative flex-1">
+            <button type="button" class="cat-rest tl-block tl-lg" style="flex-grow:450" data-dom-id="link-record-edit" aria-label="编辑记录：休息 00:00-07:30">
+              <span class="tl-time">00:00-07:30</span><span class="tl-name truncate">睡眠</span>
+            </button>
+            <div class="tl-gap" aria-hidden="true" style="flex-grow:30"></div>
+            <button type="button" class="cat-work tl-block tl-lg" style="flex-grow:210" aria-label="编辑记录：工作 08:00-11:30">
+              <span class="tl-time">08:00-11:30</span><span class="tl-name truncate">工作</span>
+            </button>
+            <button type="button" class="cat-rest tl-block tl-sm" style="flex-grow:60" aria-label="编辑记录：休息 11:30-12:30">
+              <span class="tl-name truncate">午休</span>
+            </button>
+            <button type="button" class="cat-work tl-block tl-lg" style="flex-grow:150" aria-label="编辑记录：工作 12:30-15:00">
+              <span class="tl-time">12:30-15:00</span><span class="tl-name truncate">工作</span>
+            </button>
+            <button type="button" class="cat-study tl-block" style="flex-grow:90" aria-label="编辑记录：学习 15:00-16:30">
+              <span class="tl-time">15:00-16:30</span><span class="tl-name truncate">学习</span>
+            </button>
+            <button type="button" class="cat-work tl-block" style="flex-grow:90" aria-label="编辑记录：工作 16:30-18:00">
+              <span class="tl-time">16:30-18:00</span><span class="tl-name truncate">工作</span>
+            </button>
+            <button type="button" class="cat-sport tl-block tl-sm" style="flex-grow:60" aria-label="编辑记录：运动 18:00-19:00">
+              <span class="tl-name truncate">运动</span>
+            </button>
+            <button type="button" class="cat-play tl-block tl-lg" style="flex-grow:120" aria-label="编辑记录：娱乐 19:00-21:00">
+              <span class="tl-time">19:00-21:00</span><span class="tl-name truncate">娱乐</span>
+            </button>
+            <button type="button" class="cat-read tl-block" style="flex-grow:90" aria-label="编辑记录：阅读 21:00-22:30">
+              <span class="tl-time">21:00-22:30</span><span class="tl-name truncate">阅读</span>
+            </button>
+            <button type="button" class="cat-rest tl-block tl-live" style="flex-grow:90" aria-label="编辑记录：休息 22:30 起">
+              <span class="tl-time">22:30 起</span><span class="tl-name truncate">休息</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 一键记录控制条 -->
+    <section class="sticky bottom-[72px] z-30 mt-4 rounded-2xl border border-[var(--diary-border)] bg-[var(--diary-surface)]/95 p-3 shadow-[var(--diary-shadow-2)] backdrop-blur">
+      <div class="flex items-center gap-3">
+        <button type="button" class="btn-record inline-flex h-14 flex-1 items-center justify-center gap-2 rounded-xl bg-[var(--diary-primary)] text-[var(--diary-primary-ink)] text-[15px] font-semibold transition-transform hover:-translate-y-0.5 active:translate-y-0" aria-label="结束记录">
+          <i data-lucide="square" class="h-5 w-5"></i>
+          <span class="whitespace-nowrap">结束记录</span>
+        </button>
+        <div class="min-w-0">
+          <p class="diary-caption mb-0.5">忘记结束？自动补录</p>
+          <p class="diary-num whitespace-nowrap text-[13px] font-medium text-[var(--diary-foreground)]">已计时 00:32:18</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 今日复盘入口 -->
+    <section class="mt-4">
+      <a href="#" data-dom-id="cta-diary" class="diary-card flex items-center gap-3 px-4 py-4 transition-transform hover:-translate-y-0.5">
+        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--diary-primary-soft)] text-[var(--diary-primary-strong)]">
+          <i data-lucide="pen-line" class="h-5 w-5"></i>
+        </span>
+        <span class="min-w-0 flex-1">
+          <span class="block text-[15px] font-semibold text-[var(--diary-foreground)]">今日复盘</span>
+          <span class="block truncate text-[13px] text-[var(--diary-muted-foreground)]">写一篇日记，记录时间与心情</span>
+        </span>
+        <i data-lucide="chevron-right" class="h-4 w-4 shrink-0 text-[var(--diary-muted-foreground)]"></i>
+      </a>
+    </section>
+
+    <!-- 空状态提示 -->
+    <section class="mt-4 flex flex-col items-center gap-3 rounded-2xl border border-dashed border-[var(--diary-border)] px-4 py-5 text-center">
+      <img src="../assets/empty-timeline.jpg" alt="夜晚看日程表的插画" class="empty-illustration h-36 w-full max-w-[240px] rounded-xl object-cover" />
+      <p class="diary-caption">夜里睡前记得再记一笔，晚安好梦</p>
+    </section>
+</main>
+    <style id="critical-layout">
+      .diary-card { background: var(--diary-surface); border: 1px solid var(--diary-border); border-radius: var(--diary-radius-large); box-shadow: var(--diary-shadow-1); }
+      .diary-chip { display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 10px; border-radius: 9999px; background: var(--diary-surface-2); color: var(--diary-foreground); font-size: 12px; font-weight: 500; white-space: nowrap; }
+      .diary-chip-primary { background: var(--diary-primary-soft); color: var(--diary-primary-strong); }
+      .diary-h3 { font-size: 18px; font-weight: 600; line-height: 1.3; color: var(--diary-foreground); }
+      .diary-caption { font-size: 13px; line-height: 1.5; color: var(--diary-muted-foreground); }
+      .diary-num { font-variant-numeric: tabular-nums; }
+      .cat-work{--c:#ff8a7a} .cat-study{--c:#7fb5d9} .cat-rest{--c:#b9a6e8} .cat-play{--c:#7bc8a4} .cat-sport{--c:#f2b86b} .cat-read{--c:#e893b6}
+      .timeline-bar { display: flex; flex-direction: column; gap: 1px; height: 520px; overflow: hidden; border-radius: var(--diary-radius-medium); background: var(--diary-surface-2); }
+      .tl-block, .tl-gap { flex: 1 1 0; }
+      .tl-block { width: 100%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1px; padding: 3px 10px; border: 0; border-radius: 8px; background: var(--c); color: var(--diary-primary-ink); text-align: left; overflow: hidden; cursor: pointer; transition: filter .15s ease; }
+      .tl-block:hover { filter: brightness(0.95); }
+      .tl-sm { align-items: center; justify-content: center; }
+      .tl-time { font-size: 10px; line-height: 1; opacity: .92; white-space: nowrap; }
+      .tl-name { font-size: 12px; font-weight: 600; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .tl-live { box-shadow: 0 0 0 2px var(--diary-primary); }
+      .empty-illustration { display: block; width: 100%; max-width: 240px; height: 9rem; margin-inline: auto; object-fit: cover; border-radius: var(--diary-radius-medium); }
+      nav[data-mobile-nav="global"] { width: 100%; max-width: 28rem; margin-inline: auto; }
+      @media (prefers-reduced-motion: reduce) { .tl-block, nav[data-mobile-nav="global"] a, .btn-record, a[data-dom-id] { transition: none !important; } }
+    </style>
+    <nav data-mobile-nav="global" class="w-full max-w-md mx-auto h-16 grid grid-cols-4 border-t border-[var(--diary-border)] bg-[var(--diary-surface)]"><a href="#" data-nav-key="timeline" data-dom-id="nav-timeline" data-active="true" aria-current="page" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--diary-primary)]"><i data-lucide="clock-3" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap truncate font-medium">时间轴</span></a><a href="#" data-nav-key="stats" data-dom-id="nav-stats" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--diary-muted-foreground)]"><i data-lucide="pie-chart" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap truncate">统计</span></a><a href="#" data-nav-key="goals" data-dom-id="nav-goals" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--diary-muted-foreground)]"><i data-lucide="target" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap truncate">目标</span></a><a href="#" data-nav-key="profile" data-dom-id="nav-profile" class="min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 h-full text-[var(--diary-muted-foreground)]"><i data-lucide="user-round" class="w-5 h-5 shrink-0"></i><span class="text-[11px] leading-none whitespace-nowrap truncate">我的</span></a></nav>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
