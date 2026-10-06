@@ -2,11 +2,11 @@
 AIGC:
     Label: "1"
     ContentProducer: 001191440300708461136T1XGW3
-    ProduceID: 626eed80195b74d1bf570a0768dfed33_baf93d08c14611f1a05452540064ee0f
-    ReservedCode1: mGWYVk4o6+n7rvp5qNEtcWsz5fzq0X8BPqED3gnXDgSj8cyd6EbrOsan8jteIqbJAjnwhRE5yyXlDIJE4NrU1U2nc+/3Mt8rKecWaNQiaq4PVohKX/3MT4Y7br/SyFjZTNIHxaQXm7SW8QKLCYqIRuc7SqTlWBJhD4I/eyMnNrTOX0iALOHlIFw7xZ0=
+    ProduceID: 626eed80195b74d1bf570a0768dfed33_ca83876ec15a11f1bc7f525400638852
+    ReservedCode1: LNmfFlKWJe6OPpxfdHLZdzOBFLdCsCoMh4ge30c3FZDdHOXDwNofURpul6yGwH+GVfbkirlFnuPpOWIbjUF1ipbA0HPUXG75Icgez5bKtop82L0YdRQJYZVAnJjHJpSDG8hZBUGLDE9Os5ghmVZgCKx8tRvaI1M44duzs29oYCsufM1lWar7N2CqWZk=
     ContentPropagator: 001191440300708461136T1XGW3
-    PropagateID: 626eed80195b74d1bf570a0768dfed33_baf93d08c14611f1a05452540064ee0f
-    ReservedCode2: mGWYVk4o6+n7rvp5qNEtcWsz5fzq0X8BPqED3gnXDgSj8cyd6EbrOsan8jteIqbJAjnwhRE5yyXlDIJE4NrU1U2nc+/3Mt8rKecWaNQiaq4PVohKX/3MT4Y7br/SyFjZTNIHxaQXm7SW8QKLCYqIRuc7SqTlWBJhD4I/eyMnNrTOX0iALOHlIFw7xZ0=
+    PropagateID: 626eed80195b74d1bf570a0768dfed33_ca83876ec15a11f1bc7f525400638852
+    ReservedCode2: LNmfFlKWJe6OPpxfdHLZdzOBFLdCsCoMh4ge30c3FZDdHOXDwNofURpul6yGwH+GVfbkirlFnuPpOWIbjUF1ipbA0HPUXG75Icgez5bKtop82L0YdRQJYZVAnJjHJpSDG8hZBUGLDE9Os5ghmVZgCKx8tRvaI1M44duzs29oYCsufM1lWar7N2CqWZk=
 ---
 
 # 身体追踪（Body Tracking）
@@ -66,4 +66,3 @@ curl -L -o pose_landmarker.task "https://storage.googleapis.com/mediapipe-models
 | `body_tracking.py` | 主程序：Tasks API 摄像头实时姿态追踪，模型缺失时提示下载后退出 |
 | `pose_landmarker.task` | MediaPipe 姿态模型（Tasks API 所需，官方下载） |
 | `requirements.txt` | 依赖清单 |
-*（内容由AI生成，仅供参考）*
