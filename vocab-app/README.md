@@ -2,6 +2,12 @@
 
 基于 **React Native + Expo** 的单词学习应用，支持多词本学习、SM-2 间隔重复排程复习、词典原声发音与学习统计。
 
+## 效果图
+
+![单词学习](screenshots/learn.jpg)
+![翻转复习卡片](screenshots/card.jpg)
+![词本选择](screenshots/wordbook.jpg)
+
 ## 功能特性
 
 - 多词本学习：CET-4（4537 词）/ CET-6（2165 词）/ IELTS（1319 词），词本可切换且选择持久化

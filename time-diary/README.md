@@ -2,6 +2,12 @@
 
 二次元风格的时间记录应用（纯 HTML/CSS 单页应用），奶油暖底 + 蜜桃珊瑚主色 + 樱花粉点缀，参考「爱时间」的信息架构 × 二次元轻量插画氛围。
 
+## 效果图
+
+![时间轴记录](screenshots/timeline.jpg)
+![小栗 AI 统计配置](screenshots/api-config.jpg)
+![小栗设置](screenshots/xiaoli-settings.jpg)
+
 ## 页面
 
 | 页面 | 说明 |
