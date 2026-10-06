@@ -32,4 +32,3 @@ portable_tracking/
 ├─ face_tracking/            脸部追踪（脚本 + 模型 + 一键启动.bat）
 ├─ body_tracking/            身体追踪（脚本 + 模型 + 一键启动.bat）
 └─ 使用说明.txt              本文件
-（内容由AI生成，仅供参考）

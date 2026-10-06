@@ -2,11 +2,11 @@
 AIGC:
     Label: "1"
     ContentProducer: 001191440300708461136T1XGW3
-    ProduceID: 626eed80195b74d1bf570a0768dfed33_ba425401c14611f1a05452540064ee0f
-    ReservedCode1: JO7ZZqF65x8dIoZhUwqJ0KYJ7CICow9J5RPD/xuDmfL/ybIHJSermA8L9LbpXGySHhMRqxV/3rFFx+64vWUztija4r7ElPA0HD/EPbaoaMKMbpDIdDeSvaTV4HLMmr+AzMp56XLrjoLAFNl8Q5cZsBrtm5lQ7flTmutIaHP886FikQK+GvdinApjKfo=
+    ProduceID: 626eed80195b74d1bf570a0768dfed33_c9a75166c15a11f1a05452540064ee0f
+    ReservedCode1: Y4i+DWEiDvUO+bWux6JYbS0sBVXmrTO9VRXTQxkCIwumSWnwrJH6nt/ImSdVdVD0NRNHtNn78qcbIquMT7CzjkIa+CbHjLBJYF29DMLy6T9hbvw//xpuYCwmiDPYRz1/xG9AZZa0Mxzt8UIojm2XaE1YPri+WAP8NmXg9VrErW22QT82eLJ+0fRfthY=
     ContentPropagator: 001191440300708461136T1XGW3
-    PropagateID: 626eed80195b74d1bf570a0768dfed33_ba425401c14611f1a05452540064ee0f
-    ReservedCode2: JO7ZZqF65x8dIoZhUwqJ0KYJ7CICow9J5RPD/xuDmfL/ybIHJSermA8L9LbpXGySHhMRqxV/3rFFx+64vWUztija4r7ElPA0HD/EPbaoaMKMbpDIdDeSvaTV4HLMmr+AzMp56XLrjoLAFNl8Q5cZsBrtm5lQ7flTmutIaHP886FikQK+GvdinApjKfo=
+    PropagateID: 626eed80195b74d1bf570a0768dfed33_c9a75166c15a11f1a05452540064ee0f
+    ReservedCode2: Y4i+DWEiDvUO+bWux6JYbS0sBVXmrTO9VRXTQxkCIwumSWnwrJH6nt/ImSdVdVD0NRNHtNn78qcbIquMT7CzjkIa+CbHjLBJYF29DMLy6T9hbvw//xpuYCwmiDPYRz1/xG9AZZa0Mxzt8UIojm2XaE1YPri+WAP8NmXg9VrErW22QT82eLJ+0fRfthY=
 ---
 
 # 脸部追踪（Face Tracking）
@@ -50,4 +50,3 @@ pip install -r requirements.txt
 | `face_tracking.py` | 主程序：摄像头实时人脸网格/关键点追踪绘制 |
 | `face_landmarker.task` | MediaPipe 人脸关键点模型（Tasks API 所需） |
 | `requirements.txt` | 依赖清单 |
-*（内容由AI生成，仅供参考）*

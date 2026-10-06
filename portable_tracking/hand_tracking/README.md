@@ -2,11 +2,11 @@
 AIGC:
     Label: "1"
     ContentProducer: 001191440300708461136T1XGW3
-    ProduceID: 626eed80195b74d1bf570a0768dfed33_b94cc612c14611f1a05452540064ee0f
-    ReservedCode1: TwCDXy7cjROdjii2SsDfBsN5Nz2nTWmFWghRt71PTbYwGFHkFU7yOSarVgIwS+s4B3zJOWUwRp3e3iqPAUi1igS/sL1YhtmJGRiv0fY0xrdqNHsT3T+rJssvetgXI13zbM8jIHsTvGQKUfTvPqaCnz35AfpwGL4DDmzxnHFMckYJYSlyP0umn1YbH1I=
+    ProduceID: 626eed80195b74d1bf570a0768dfed33_c8cd8da7c15a11f1bc7f525400638852
+    ReservedCode1: t41VX3fzkelwRzjepRPYuTW15sEHz3/m/ZfUCi2KzfKxnrIOigXcCdX1UzS+sK5RbKYKD+StRclecAH6ypUpDGqrCfsaVm62juwZWclDshOXRKlOBGgSyrDwvHivTZcdj9zgCx0wG19O8devhGDdDL41WLxJgy4j85wg8JlqSE4E/PeHPNbVgATqHC4=
     ContentPropagator: 001191440300708461136T1XGW3
-    PropagateID: 626eed80195b74d1bf570a0768dfed33_b94cc612c14611f1a05452540064ee0f
-    ReservedCode2: TwCDXy7cjROdjii2SsDfBsN5Nz2nTWmFWghRt71PTbYwGFHkFU7yOSarVgIwS+s4B3zJOWUwRp3e3iqPAUi1igS/sL1YhtmJGRiv0fY0xrdqNHsT3T+rJssvetgXI13zbM8jIHsTvGQKUfTvPqaCnz35AfpwGL4DDmzxnHFMckYJYSlyP0umn1YbH1I=
+    PropagateID: 626eed80195b74d1bf570a0768dfed33_c8cd8da7c15a11f1bc7f525400638852
+    ReservedCode2: t41VX3fzkelwRzjepRPYuTW15sEHz3/m/ZfUCi2KzfKxnrIOigXcCdX1UzS+sK5RbKYKD+StRclecAH6ypUpDGqrCfsaVm62juwZWclDshOXRKlOBGgSyrDwvHivTZcdj9zgCx0wG19O8devhGDdDL41WLxJgy4j85wg8JlqSE4E/PeHPNbVgATqHC4=
 ---
 
 # 手部追踪（Hand Tracking）
@@ -50,4 +50,3 @@ pip install -r requirements.txt
 | `hand_tracking.py` | 主程序：摄像头实时手部关键点追踪与连线绘制 |
 | `hand_landmarker.task` | MediaPipe 手部关键点模型（Tasks API 所需） |
 | `requirements.txt` | 依赖清单 |
-*（内容由AI生成，仅供参考）*
