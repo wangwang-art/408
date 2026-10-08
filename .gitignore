@@ -18,6 +18,3 @@ project/
 
 # Portable tracking embedded runtime (370MB, distributed locally, not on GitHub)
 portable_tracking/runtime/
-
-# AudioQC embedded runtime (477MB, distributed locally, not on GitHub)
-audioqc/runtime/
