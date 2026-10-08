@@ -50,7 +50,8 @@ audioqc/
 ├── 启动Flask版.bat            # 便携启动（Flask 版）
 ├── 释放端口.bat               # 释放 7860 / 5000 端口
 ├── 使用说明.txt               # 便携版使用说明
-└── requirements.txt           # Python 依赖清单
+├── requirements.txt           # Python 依赖清单
+└── runtime/                   # 内置嵌入式 Python 运行时（约 477MB，clone 即用）
 ```
 
-> 说明：完整便携分发包内置嵌入式 Python 运行时（`runtime/`，约 477MB），体积过大不纳入本仓库，由 `.gitignore` 排除；如需零安装分发请自行附带 runtime 目录。
+> 本仓库已包含完整嵌入式 Python 运行时（`runtime/`），clone 后无需安装任何环境，直接双击 `一键启动.bat` 或 `启动Flask版.bat` 即可运行。
