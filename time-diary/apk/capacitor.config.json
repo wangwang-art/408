@@ -1,0 +1,11 @@
+{
+  "appId": "com.wangyouhong.timediary",
+  "appName": "时间日记",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>时间日记</title>
+    <script>/* 主题预置：避免暗色闪白（文档第八章） */try{var _tds=JSON.parse(localStorage.getItem('td:settings')||'{}');if(_tds.theme==='dark'){document.documentElement.classList.remove('light');document.documentElement.classList.add('dark');}}catch(e){}</script>
+    <link rel="stylesheet" href="css/tokens.css">
+    <script src="assets/vendor/tailwind.browser.js"></script>
+    <script src="assets/vendor/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--diary-background);
+    --color-foreground: var(--diary-foreground);
+    --color-card: var(--diary-card);
+    --color-card-foreground: var(--diary-card-foreground);
+    --color-popover: var(--diary-popover);
+    --color-popover-foreground: var(--diary-popover-foreground);
+    --color-primary: var(--diary-primary);
+    --color-primary-foreground: var(--diary-primary-foreground);
+    --color-muted: var(--diary-muted);
+    --color-muted-foreground: var(--diary-muted-foreground);
+    --color-border: var(--diary-border);
+    --color-input: var(--diary-input);
+    --color-ring: var(--diary-ring);
+    --radius-sm: var(--diary-radius-small);
+    --radius-md: var(--diary-radius-medium);
+    --radius-lg: var(--diary-radius-large);
+  }
+    </style>
+</head>
+<body class="font-sans antialiased">
+    <!-- SPA 壳：路由器把页面渲染进 #app（.page-view 滚动容器） -->
+    <div id="app"></div>
+    <!-- 全局底部导航（固定悬浮 + 底部安全区，见 tokens.css） -->
+    <nav data-mobile-nav="global" class="h-16 grid grid-cols-4"></nav>
+
+    <script src="js/config/constants.js"></script>
+    <script src="js/utils/id.js"></script>
+    <script src="js/utils/date.js"></script>
+    <script src="js/utils/format.js"></script>
+    <script src="js/db/storage.js"></script>
+    <script src="js/db/migrations.js"></script>
+    <script src="js/repo/repositories.js"></script>
+    <script src="js/domain/records.js"></script>
+    <script src="js/domain/goals.js"></script>
+    <script src="js/domain/stats.js"></script>
+    <script src="js/services/notify.js"></script>
+    <script src="js/services/backup.js"></script>
+    <script src="js/ui/components.js"></script>
+    <script src="js/ui/theme.js"></script>
+    <script src="js/ui/viewport.js"></script>
+    <script src="js/pages/timeline.js"></script>
+    <script src="js/pages/record-edit.js"></script>
+    <script src="js/pages/category.js"></script>
+    <script src="js/pages/stats.js"></script>
+    <script src="js/pages/goals.js"></script>
+    <script src="js/pages/goal-edit.js"></script>
+    <script src="js/pages/diary.js"></script>
+    <script src="js/pages/profile.js"></script>
+    <script src="js/pages/onboarding.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
