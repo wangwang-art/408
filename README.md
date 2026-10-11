@@ -5,7 +5,7 @@
 | 目录 | 项目 | 说明 |
 |---|---|---|
 | `vocab-app/` | VocabApp 背单词 | React Native + Expo 单词学习应用（SM-2 间隔重复、词典原声发音、学习统计） |
-| `time-diary/` | 时间日记 | 二次元风格时间记录应用（纯 HTML/CSS，时间轴、日记、目标、统计） |
+| `time-diary/` | 时间日记 | 二次元风格时间记录 SPA（hash 路由动效、安全区适配、一键记录/时间轴/统计/目标/日记，本地存储 + JSON 备份；Capacitor 打包安卓 APK，见 [Releases](https://github.com/wangwang-art/408/releases)） |
 | `workflow/` | ComfyUI 工作流 | AI 绘画工作流 JSON（real to anime 写实转动漫、videoflow H3 视频工作流、z-image 图像生成） |
 | `portable_tracking/` | 人体追踪便携包 | MediaPipe 手部/脸部/身体实时追踪（Python + Tasks API，内置一键配置与一键启动，零安装便携分发） |
 | `audioqc/` | 音频质检工具 | 规则质检 + DNSMOS 本地无参考音质评估（Gradio/Flask 双界面，内置一键启动，零安装便携分发） |
