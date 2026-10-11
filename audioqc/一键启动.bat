@@ -1,4 +1,5 @@
 @echo off
+chcp 936 >nul
 setlocal
 cd /d "%~dp0"
 
@@ -10,8 +11,8 @@ echo.
 rem ---- Check embedded runtime ----
 if not exist "runtime\python\python.exe" (
     echo [ERROR] Embedded Python runtime not found.
-    echo         Please re-download the FULL package with runtime folder.
-    echo         Do NOT delete the "runtime" folder.
+    echo         Please run "一键配置.bat" first to download Python runtime and dependencies.
+    echo         (requires network, uses Chinese mirrors)
     echo.
     pause
     exit /b 1
