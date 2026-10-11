@@ -21,7 +21,9 @@ pip install -r requirements.txt
 
 ## 启动方式
 
-便携版（推荐，Windows 10/11）：直接双击本目录下 `一键启动.bat`（Gradio 版，端口 7860）或 `启动Flask版.bat`（Flask 版，端口 5000），脚本使用包内 runtime 中的嵌入式 Python 运行，无需预装 Python。
+便携版（推荐，Windows 10/11）：
+1. 首次使用双击本目录下 `一键配置.bat`，脚本会从国内镜像自动下载 Python 运行时并安装依赖（需联网）。
+2. 配置完成后双击 `一键启动.bat`（Gradio 版，端口 7860）或 `启动Flask版.bat`（Flask 版，端口 5000）即可运行，无需预装 Python。
 
 手动运行（需已配置 Python 环境并安装依赖）：
 
@@ -48,10 +50,11 @@ audioqc/
 │   └── model_v8.onnx          # P808 参考模型
 ├── 一键启动.bat               # 便携启动（Gradio 版）
 ├── 启动Flask版.bat            # 便携启动（Flask 版）
+├── 一键配置.bat               # 首次配置：下载 Python 运行时 + 安装依赖
 ├── 释放端口.bat               # 释放 7860 / 5000 端口
 ├── 使用说明.txt               # 便携版使用说明
 ├── requirements.txt           # Python 依赖清单
-└── runtime/                   # 内置嵌入式 Python 运行时（约 477MB，clone 即用）
+└── runtime/                   # 嵌入式 Python 运行时（由一键配置.bat 自动生成，不入库）
 ```
 
-> 本仓库已包含完整嵌入式 Python 运行时（`runtime/`），clone 后无需安装任何环境，直接双击 `一键启动.bat` 或 `启动Flask版.bat` 即可运行。
+> `runtime/` 目录由 `一键配置.bat` 自动下载生成，不包含在仓库中。clone 后首次使用需运行 `一键配置.bat` 配置环境。
