@@ -16,5 +16,14 @@ build/
 # Local project workdir (contains dev venvs, zips, intermediates)
 project/
 
-# Portable tracking embedded runtime (370MB, distributed locally, not on GitHub)
+# Portable tracking embedded runtime (download via 一键配置.bat)
 portable_tracking/runtime/
+
+# AudioQC embedded runtime (download via 一键配置.bat)
+audioqc/runtime/
+
+# MediaPipe model files (download via 一键配置.bat)
+*.task
+
+# Logs
+*.log

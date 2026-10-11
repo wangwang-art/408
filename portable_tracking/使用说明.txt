@@ -2,11 +2,13 @@
 =======================================
 
 一、本包是什么
-本文件夹是一个"零安装"便携分发包，内置了 Python 运行时（runtime/python）和全部依赖（mediapipe、opencv-python），
-不需要目标电脑安装 Python，也不需要联网安装任何东西，拷走即用。
+本文件夹是一个"零安装"便携分发包，通过"一键配置.bat"自动下载 Python 运行时、
+依赖和 MediaPipe 模型文件，不需要目标电脑安装 Python，也不需要手动下载模型，
+配置完成后拷走即用。
 
 二、使用方法
-0. 从 GitHub 下载的源码版不包含 runtime 文件夹，请先双击根目录的"一键配置.bat"，自动下载内置 Python 并安装依赖（需联网，使用国内镜像），完成后即可继续。
+0. 首次使用请先双击根目录的"一键配置.bat"，自动下载 Python 运行时、安装依赖并下载
+   模型文件（需联网，使用国内镜像），完成后即可继续。
 1. 把整个 portable_tracking 文件夹复制到目标电脑的任意位置（U 盘、桌面、D 盘均可，路径不要有空格或括号最好）。
 2. 进入对应的子文件夹，双击"一键启动.bat"：
      hand_tracking\一键启动.bat   手部追踪（最多 2 只手，21 个关键点连线）
@@ -27,8 +29,12 @@
 
 五、目录结构
 portable_tracking/
-├─ runtime/python/           内置 Python 运行时（3.12.10 embeddable）+ 依赖
-├─ hand_tracking/            手部追踪（脚本 + 模型 + 一键启动.bat）
-├─ face_tracking/            脸部追踪（脚本 + 模型 + 一键启动.bat）
-├─ body_tracking/            身体追踪（脚本 + 模型 + 一键启动.bat）
+├─ 一键配置.bat              首次配置：下载 Python 运行时 + 依赖 + 模型
+├─ runtime/python/           内置 Python 运行时（由一键配置.bat 下载生成）
+├─ hand_tracking/            手部追踪（脚本 + 一键启动.bat）
+│  └─ hand_landmarker.task   模型文件（由一键配置.bat 下载生成）
+├─ face_tracking/            脸部追踪（脚本 + 一键启动.bat）
+│  └─ face_landmarker.task   模型文件（由一键配置.bat 下载生成）
+├─ body_tracking/            身体追踪（脚本 + 一键启动.bat）
+│  └─ pose_landmarker.task   模型文件（由一键配置.bat 下载生成）
 └─ 使用说明.txt              本文件
