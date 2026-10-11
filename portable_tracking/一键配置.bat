@@ -1,11 +1,11 @@
 @echo off
-chcp 65001 >nul
+chcp 936 >nul
 setlocal
 cd /d "%~dp0"
 
 set "PYEXE=%~dp0runtime\python\python.exe"
 
-rem è¿è¡Œæ—¶å®Œæ•´ï¼ˆpython + mediapipeï¼‰åˆ™ç›´æ¥è·³è¿‡
+rem ÔËĞĞÊ±ÍêÕû£¨python + mediapipe£©ÔòÖ±½ÓÌø¹ı
 if exist "%PYEXE%" (
     if exist "%~dp0runtime\python\Lib\site-packages\mediapipe" (
         echo Python runtime already configured.
@@ -14,29 +14,29 @@ if exist "%PYEXE%" (
         pause
         exit /b 0
     )
-    echo æ£€æµ‹åˆ° Python å·²å­˜åœ¨ä½†ä¾èµ–æœªè£…å®Œï¼Œç»§ç»­å®‰è£…ä¾èµ–...
+    echo ¼ì²âµ½ Python ÒÑ´æÔÚµ«ÒÀÀµÎ´×°Íê£¬¼ÌĞø°²×°ÒÀÀµ...
     goto :install_deps
 )
 
 echo ============================================
-echo   äººä½“è¿½è¸ª ä¸€é”®é…ç½®ï¼ˆPython è¿è¡Œæ—¶ + ä¾èµ– + æ¨¡å‹ï¼‰
-echo   éœ€è¦è”ç½‘ï¼Œä½¿ç”¨å›½å†…é•œåƒæº
+echo   ÈËÌå×·×Ù Ò»¼üÅäÖÃ£¨Python ÔËĞĞÊ± + ÒÀÀµ + Ä£ĞÍ£©
+echo   ĞèÒªÁªÍø£¬Ê¹ÓÃ¹úÄÚ¾µÏñÔ´
 echo ============================================
 echo.
 
-echo [1/5] åˆ›å»º runtime æ–‡ä»¶å¤¹...
+echo [1/5] ´´½¨ runtime ÎÄ¼ş¼Ğ...
 if not exist "%~dp0runtime" mkdir "%~dp0runtime"
 
-echo [2/5] ä»åä¸ºäº‘é•œåƒä¸‹è½½ Python 3.12.10 embeddable...
+echo [2/5] ´Ó»ªÎªÔÆ¾µÏñÏÂÔØ Python 3.12.10 embeddable...
 curl -L --connect-timeout 30 --retry 3 -o "%~dp0runtime\python-embed.zip" "https://mirrors.huaweicloud.com/python/3.12.10/python-3.12.10-embed-amd64.zip"
 if errorlevel 1 (
-    echo ä¸‹è½½å¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œåé‡è¯•ã€‚
+    echo ÏÂÔØÊ§°Ü£¬Çë¼ì²éÍøÂçºóÖØÊÔ¡£
     echo.
     pause
     exit /b 1
 )
 
-echo [3/5] è§£å‹å¹¶å¯ç”¨ site-packages...
+echo [3/5] ½âÑ¹²¢ÆôÓÃ site-packages...
 powershell -NoProfile -Command "Expand-Archive -Force -LiteralPath '%~dp0runtime\python-embed.zip' -DestinationPath '%~dp0runtime\python'"
 del /q "%~dp0runtime\python-embed.zip"
 for %%F in ("%~dp0runtime\python\python*._pth") do (
@@ -44,16 +44,16 @@ for %%F in ("%~dp0runtime\python\python*._pth") do (
 )
 
 :install_deps
-echo [4/5] å®‰è£… pip å’Œä¾èµ–ï¼ˆæ¸…åé•œåƒï¼‰...
-rem get-pip.py è‹¥ä¸Šæ¬¡ä¸‹è½½ä¸å®Œæ•´ï¼ˆå°äº1MBï¼‰åˆ™åˆ é™¤é‡ä¸‹
+echo [4/5] °²×° pip ºÍÒÀÀµ£¨Çå»ª¾µÏñ£©...
+rem get-pip.py ÈôÉÏ´ÎÏÂÔØ²»ÍêÕû£¨Ğ¡ÓÚ1MB£©ÔòÉ¾³ıÖØÏÂ
 if exist "%~dp0runtime\get-pip.py" (
     for %%A in ("%~dp0runtime\get-pip.py") do if %%~zA LSS 1000000 del /q "%~dp0runtime\get-pip.py"
 )
 if not exist "%~dp0runtime\get-pip.py" (
-    echo ä¸‹è½½ pip å¼•å¯¼è„šæœ¬...
+    echo ÏÂÔØ pip Òıµ¼½Å±¾...
     curl -L --connect-timeout 30 --retry 3 -o "%~dp0runtime\get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
     if errorlevel 1 (
-        echo get-pip.py ä¸‹è½½å¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œåé‡è¯•ã€‚
+        echo get-pip.py ÏÂÔØÊ§°Ü£¬Çë¼ì²éÍøÂçºóÖØÊÔ¡£
         echo.
         pause
         exit /b 1
@@ -61,55 +61,55 @@ if not exist "%~dp0runtime\get-pip.py" (
 )
 "%~dp0runtime\python\python.exe" "%~dp0runtime\get-pip.py" -i https://pypi.tuna.tsinghua.edu.cn/simple
 if errorlevel 1 (
-    echo pip å®‰è£…å¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œåé‡è¯•ã€‚
+    echo pip °²×°Ê§°Ü£¬Çë¼ì²éÍøÂçºóÖØÊÔ¡£
     echo.
     pause
     exit /b 1
 )
 "%~dp0runtime\python\python.exe" -m pip install mediapipe opencv-python -i https://pypi.tuna.tsinghua.edu.cn/simple
 if errorlevel 1 (
-    echo ä¾èµ–å®‰è£…å¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œåé‡è¯•ã€‚
+    echo ÒÀÀµ°²×°Ê§°Ü£¬Çë¼ì²éÍøÂçºóÖØÊÔ¡£
     echo.
     pause
     exit /b 1
 )
 
-echo [5/5] æ£€æŸ¥ MediaPipe æ¨¡å‹æ–‡ä»¶ï¼ˆç¼ºå¤±æ—¶è‡ªåŠ¨ä¸‹è½½ï¼‰...
+echo [5/5] ¼ì²é MediaPipe Ä£ĞÍÎÄ¼ş£¨È±Ê§Ê±×Ô¶¯ÏÂÔØ£©...
 if not exist "%~dp0body_tracking\pose_landmarker.task" (
-    echo   - ä¸‹è½½ pose_landmarker.task (èº«ä½“è¿½è¸ª)
+    echo   - ÏÂÔØ pose_landmarker.task (ÉíÌå×·×Ù)
     curl -L --connect-timeout 30 --retry 3 -o "%~dp0body_tracking\pose_landmarker.task" "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task"
     if errorlevel 1 (
-        echo èº«ä½“è¿½è¸ªæ¨¡å‹ä¸‹è½½å¤±è´¥ï¼Œå°è¯•æ‰‹åŠ¨ä¸‹è½½ï¼š
+        echo ÉíÌå×·×ÙÄ£ĞÍÏÂÔØÊ§°Ü£¬³¢ÊÔÊÖ¶¯ÏÂÔØ£º
         echo   https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task
-        echo   ä¸‹è½½åé‡å‘½åä¸º pose_landmarker.task æ”¾å…¥ body_tracking\ ç›®å½•
+        echo   ÏÂÔØºóÖØÃüÃûÎª pose_landmarker.task ·ÅÈë body_tracking\ Ä¿Â¼
     )
 )
 if not exist "%~dp0hand_tracking\hand_landmarker.task" (
-    echo   - ä¸‹è½½ hand_landmarker.task (æ‰‹éƒ¨è¿½è¸ª)
+    echo   - ÏÂÔØ hand_landmarker.task (ÊÖ²¿×·×Ù)
     curl -L --connect-timeout 30 --retry 3 -o "%~dp0hand_tracking\hand_landmarker.task" "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task"
     if errorlevel 1 (
-        echo æ‰‹éƒ¨è¿½è¸ªæ¨¡å‹ä¸‹è½½å¤±è´¥ï¼Œå°è¯•æ‰‹åŠ¨ä¸‹è½½ï¼š
+        echo ÊÖ²¿×·×ÙÄ£ĞÍÏÂÔØÊ§°Ü£¬³¢ÊÔÊÖ¶¯ÏÂÔØ£º
         echo   https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
-        echo   ä¸‹è½½åæ”¾å…¥ hand_tracking\ ç›®å½•
+        echo   ÏÂÔØºó·ÅÈë hand_tracking\ Ä¿Â¼
     )
 )
 if not exist "%~dp0face_tracking\face_landmarker.task" (
-    echo   - ä¸‹è½½ face_landmarker.task (è„¸éƒ¨è¿½è¸ª)
+    echo   - ÏÂÔØ face_landmarker.task (Á³²¿×·×Ù)
     curl -L --connect-timeout 30 --retry 3 -o "%~dp0face_tracking\face_landmarker.task" "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"
     if errorlevel 1 (
-        echo è„¸éƒ¨è¿½è¸ªæ¨¡å‹ä¸‹è½½å¤±è´¥ï¼Œå°è¯•æ‰‹åŠ¨ä¸‹è½½ï¼š
+        echo Á³²¿×·×ÙÄ£ĞÍÏÂÔØÊ§°Ü£¬³¢ÊÔÊÖ¶¯ÏÂÔØ£º
         echo   https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task
-        echo   ä¸‹è½½åæ”¾å…¥ face_tracking\ ç›®å½•
+        echo   ÏÂÔØºó·ÅÈë face_tracking\ Ä¿Â¼
     )
 )
 
 echo.
 echo ============================================
-echo   é…ç½®å®Œæˆï¼
-echo   åŒå‡»å¯¹åº”å­ç›®å½•ä¸‹çš„ ä¸€é”®å¯åŠ¨.bat å³å¯è¿è¡Œï¼š
-echo     body_tracking\ä¸€é”®å¯åŠ¨.bat   èº«ä½“è¿½è¸ª
-echo     hand_tracking\ä¸€é”®å¯åŠ¨.bat   æ‰‹éƒ¨è¿½è¸ª
-echo     face_tracking\ä¸€é”®å¯åŠ¨.bat   è„¸éƒ¨è¿½è¸ª
+echo   ÅäÖÃÍê³É£¡
+echo   Ë«»÷¶ÔÓ¦×ÓÄ¿Â¼ÏÂµÄ Ò»¼üÆô¶¯.bat ¼´¿ÉÔËĞĞ£º
+echo     body_tracking\Ò»¼üÆô¶¯.bat   ÉíÌå×·×Ù
+echo     hand_tracking\Ò»¼üÆô¶¯.bat   ÊÖ²¿×·×Ù
+echo     face_tracking\Ò»¼üÆô¶¯.bat   Á³²¿×·×Ù
 echo ============================================
 echo.
 pause
