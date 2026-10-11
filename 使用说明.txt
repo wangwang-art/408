@@ -1,0 +1,21 @@
+408 测试包使用说明
+====================
+
+本测试包包含两个子项目（均不含内置 Python 运行时，首次运行需联网配置）：
+
+1. audioqc          音频质检工具（Gradio/Flask 双界面 + DNSMOS 本地评估）
+2. portable_tracking MediaPipe 手部/脸部/身体实时追踪（便携包）
+
+首次使用（每台电脑只需一次）：
+  1) 双击 audioqc\一键配置.bat       —— 自动下载 Python 3.12.10 并安装依赖
+  2) 双击 portable_tracking\一键配置.bat —— 自动下载 Python 并安装 mediapipe/opencv
+
+日常使用：
+  - audioqc：双击 audioqc\一键启动.bat 启动质检界面（浏览器访问 http://127.0.0.1:7860）
+  - portable_tracking：双击 hand_tracking\一键启动.bat / face_tracking\一键启动.bat / body_tracking\一键启动.bat 分别运行手/脸/身体追踪（需摄像头）
+
+说明：
+  - 配置脚本使用国内镜像（华为云 Python、清华 PyPI），需联网，约需 5-10 分钟
+  - 配置中断可重新双击脚本，会自动续跑（已装部分会跳过）
+  - 模型文件已包含在各子目录内，无需另行下载
+  - 所有脚本为 UTF-8 编码，VS Code 和命令行均正常显示中文
