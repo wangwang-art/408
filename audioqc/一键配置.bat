@@ -1,39 +1,39 @@
 @echo off
-chcp 936 >nul
+chcp 65001 >nul
 setlocal
 cd /d "%~dp0"
 
-rem ---- ÔËĞĞÊ±ÍêÕûÔòÌø¹ı ----
+rem ---- è¿è¡Œæ—¶å®Œæ•´åˆ™è·³è¿‡ ----
 if exist "%~dp0runtime\python\python.exe" (
     echo Python runtime already configured.
-    echo You can double-click Ò»¼üÆô¶¯.bat to run AudioQC.
+    echo You can double-click ä¸€é”®å¯åŠ¨.bat to run AudioQC.
     echo.
     pause
     exit /b 0
 )
 
 echo ============================================
-echo   AudioQC Ò»¼üÅäÖÃ£¨ÏÂÔØ Python ÔËĞĞÊ± + °²×°ÒÀÀµ£©
-echo   ĞèÒªÁªÍø£¬Ê¹ÓÃ¹úÄÚ¾µÏñÔ´
+echo   AudioQC ä¸€é”®é…ç½®ï¼ˆä¸‹è½½ Python è¿è¡Œæ—¶ + å®‰è£…ä¾èµ–ï¼‰
+echo   éœ€è¦è”ç½‘ï¼Œä½¿ç”¨å›½å†…é•œåƒæº
 echo ============================================
 echo.
 
-echo [1/5] ´´½¨ runtime ÎÄ¼ş¼Ğ...
+echo [1/5] åˆ›å»º runtime æ–‡ä»¶å¤¹...
 if not exist "%~dp0runtime" mkdir "%~dp0runtime"
 
-echo [2/5] ´Ó»ªÎªÔÆ¾µÏñÏÂÔØ Python 3.12.10 embeddable...
+echo [2/5] ä»åä¸ºäº‘é•œåƒä¸‹è½½ Python 3.12.10 embeddable...
 curl -L --connect-timeout 30 --retry 3 -o "%~dp0runtime\python-embed.zip" "https://mirrors.huaweicloud.com/python/3.12.10/python-3.12.10-embed-amd64.zip"
 if errorlevel 1 (
-    echo ÏÂÔØÊ§°Ü£¬Çë¼ì²éÍøÂçºóÖØÊÔ¡£
+    echo ä¸‹è½½å¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œåé‡è¯•ã€‚
     echo.
     pause
     exit /b 1
 )
 
-echo [3/5] ½âÑ¹²¢ÆôÓÃ site-packages...
+echo [3/5] è§£å‹å¹¶å¯ç”¨ site-packages...
 powershell -NoProfile -Command "Expand-Archive -Force -LiteralPath '%~dp0runtime\python-embed.zip' -DestinationPath '%~dp0runtime\python'"
 if errorlevel 1 (
-    echo ½âÑ¹Ê§°Ü£¬¿ÉÄÜÊÇÏÂÔØ²»ÍêÕû£¬ÇëÉ¾³ı runtime ÎÄ¼ş¼ĞºóÖØÊÔ¡£
+    echo è§£å‹å¤±è´¥ï¼Œå¯èƒ½æ˜¯ä¸‹è½½ä¸å®Œæ•´ï¼Œè¯·åˆ é™¤ runtime æ–‡ä»¶å¤¹åé‡è¯•ã€‚
     echo.
     pause
     exit /b 1
@@ -43,15 +43,15 @@ for %%F in ("%~dp0runtime\python\python*._pth") do (
     powershell -NoProfile -Command "(Get-Content -LiteralPath '%%F') -replace '^#import site','import site' | Set-Content -LiteralPath '%%F' -Encoding ASCII"
 )
 
-echo [4/5] °²×° pip£¨Çå»ª¾µÏñ£©...
-rem get-pip.py ÈôÉÏ´ÎÏÂÔØ²»ÍêÕû£¨Ğ¡ÓÚ1MB£©ÔòÉ¾³ıÖØÏÂ
+echo [4/5] å®‰è£… pipï¼ˆæ¸…åé•œåƒï¼‰...
+rem get-pip.py è‹¥ä¸Šæ¬¡ä¸‹è½½ä¸å®Œæ•´ï¼ˆå°äº1MBï¼‰åˆ™åˆ é™¤é‡ä¸‹
 if exist "%~dp0runtime\get-pip.py" (
     for %%A in ("%~dp0runtime\get-pip.py") do if %%~zA LSS 1000000 del /q "%~dp0runtime\get-pip.py"
 )
 if not exist "%~dp0runtime\get-pip.py" (
     curl -L --connect-timeout 30 --retry 3 -o "%~dp0runtime\get-pip.py" "https://bootstrap.pypa.io/get-pip.py"
     if errorlevel 1 (
-        echo get-pip.py ÏÂÔØÊ§°Ü£¬Çë¼ì²éÍøÂçºóÖØÊÔ¡£
+        echo get-pip.py ä¸‹è½½å¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œåé‡è¯•ã€‚
         echo.
         pause
         exit /b 1
@@ -59,17 +59,17 @@ if not exist "%~dp0runtime\get-pip.py" (
 )
 "%~dp0runtime\python\python.exe" "%~dp0runtime\get-pip.py" -i https://pypi.tuna.tsinghua.edu.cn/simple
 if errorlevel 1 (
-    echo pip °²×°Ê§°Ü£¬Çë¼ì²éÍøÂçºóÖØÊÔ¡£
+    echo pip å®‰è£…å¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œåé‡è¯•ã€‚
     echo.
     pause
     exit /b 1
 )
 del /q "%~dp0runtime\get-pip.py"
 
-echo [5/5] °²×°ÏîÄ¿ÒÀÀµ£¨Çå»ª¾µÏñ£©...
+echo [5/5] å®‰è£…é¡¹ç›®ä¾èµ–ï¼ˆæ¸…åé•œåƒï¼‰...
 "%~dp0runtime\python\python.exe" -m pip install -r "%~dp0requirements.txt" -i https://pypi.tuna.tsinghua.edu.cn/simple
 if errorlevel 1 (
-    echo ÒÀÀµ°²×°Ê§°Ü£¬Çë¼ì²éÍøÂçºóÖØÊÔ¡£
+    echo ä¾èµ–å®‰è£…å¤±è´¥ï¼Œè¯·æ£€æŸ¥ç½‘ç»œåé‡è¯•ã€‚
     echo.
     pause
     exit /b 1
@@ -77,9 +77,9 @@ if errorlevel 1 (
 
 echo.
 echo ============================================
-echo   ÅäÖÃÍê³É£¡
-echo   Ë«»÷ Ò»¼üÆô¶¯.bat ¼´¿ÉÔËĞĞÒôÆµÖÊ¼ì¹¤¾ß£¨¶Ë¿Ú 7860£©
-echo   ÈçĞè Flask °æ£¬Ë«»÷ Æô¶¯Flask°æ.bat£¨¶Ë¿Ú 5000£©
+echo   é…ç½®å®Œæˆï¼
+echo   åŒå‡» ä¸€é”®å¯åŠ¨.bat å³å¯è¿è¡ŒéŸ³é¢‘è´¨æ£€å·¥å…·ï¼ˆç«¯å£ 7860ï¼‰
+echo   å¦‚éœ€ Flask ç‰ˆï¼ŒåŒå‡» å¯åŠ¨Flaskç‰ˆ.batï¼ˆç«¯å£ 5000ï¼‰
 echo ============================================
 echo.
 pause
