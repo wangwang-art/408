@@ -1,5 +1,5 @@
 @echo off
-chcp 936 >nul
+chcp 65001 >nul
 cd /d "%~dp0"
 "%~dp0..\runtime\python\python.exe" "%~dp0body_tracking.py"
 pause
