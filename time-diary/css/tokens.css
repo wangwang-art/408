@@ -1,0 +1,396 @@
+/* ============================================================
+   时间日记 · 设计令牌与公共样式（样式层唯一来源）
+   所有页面只引用本文件，页面私有样式留在各自 HTML 内
+   ============================================================ */
+
+:root {
+  /* ---------- 品牌主色（蜜桃珊瑚） ---------- */
+  --diary-primary: #ff8a7a;
+  --diary-primary-strong: #f97a68;
+  --diary-primary-soft: #fff0ec;
+  --diary-primary-tint: #ffe4dc;
+  --diary-primary-ink: #ffffff;
+
+  /* ---------- 中性色（暖灰奶油系） ---------- */
+  --diary-background: #fffaf7;
+  --diary-surface: #ffffff;
+  --diary-surface-2: #fff3ee;
+  --diary-foreground: #4a3530;
+  --diary-muted: #fff1ec;
+  --diary-muted-foreground: #a08a82;
+  --diary-border: #f6e3dc;
+  --diary-input: #f6e3dc;
+  --diary-ring: rgba(255, 138, 122, 0.35);
+
+  /* ---------- 语义别名 ---------- */
+  --diary-card: var(--diary-surface);
+  --diary-card-foreground: var(--diary-foreground);
+  --diary-popover: var(--diary-surface);
+  --diary-popover-foreground: var(--diary-foreground);
+  --diary-primary-foreground: var(--diary-primary-ink);
+
+  /* ---------- 语义状态色 ---------- */
+  --state-success: #7bc8a4;
+  --state-warning: #f2b86b;
+  --state-error: #ef7d78;
+  --state-info: #7fb5d9;
+
+  /* ---------- 排版 ---------- */
+  --diary-font-primary: "Inter", "HarmonyOS Sans SC", "PingFang SC", "MiSans", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+  --diary-font-display: "Inter", "HarmonyOS Sans SC", "PingFang SC", "MiSans", "Noto Sans SC", system-ui, sans-serif;
+
+  /* ---------- 圆角 ---------- */
+  --diary-radius-small: 4px;
+  --diary-radius-medium: 12px;
+  --diary-radius-large: 20px;
+  --diary-radius-full: 9999px;
+
+  /* ---------- 阴影 ---------- */
+  --diary-shadow-1: 0 1px 2px rgba(143, 74, 58, 0.05), 0 1px 1px rgba(143, 74, 58, 0.03);
+  --diary-shadow-2: 0 8px 24px -8px rgba(143, 74, 58, 0.18);
+  --diary-shadow-3: 0 24px 60px -20px rgba(143, 74, 58, 0.30);
+}
+
+/* ---------- 暗色模式（午夜暖棕） ---------- */
+.dark {
+  --diary-primary: #ff9a8c;
+  --diary-primary-strong: #ffab9e;
+  --diary-primary-soft: rgba(255, 154, 140, 0.16);
+  --diary-primary-tint: rgba(255, 154, 140, 0.10);
+  --diary-primary-ink: #3a2119;
+
+  --diary-background: #1c1513;
+  --diary-surface: #251d1a;
+  --diary-surface-2: #2e2420;
+  --diary-foreground: #f3e8e2;
+  --diary-muted: #2e2420;
+  --diary-muted-foreground: #a8948a;
+  --diary-border: #3a2c27;
+  --diary-input: #3a2c27;
+  --diary-ring: rgba(255, 154, 140, 0.40);
+
+  --diary-card: var(--diary-surface);
+  --diary-card-foreground: var(--diary-foreground);
+  --diary-popover: var(--diary-surface);
+  --diary-popover-foreground: var(--diary-foreground);
+  --diary-primary-foreground: var(--diary-primary-ink);
+
+  --diary-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --diary-shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.45);
+  --diary-shadow-3: 0 24px 60px -20px rgba(0, 0, 0, 0.60);
+}
+
+/* ============================================================
+   排版类
+   ============================================================ */
+.diary-display {
+  font-family: var(--diary-font-display);
+  font-size: clamp(40px, 6vw, 72px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--diary-foreground);
+  text-wrap: balance;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.diary-h1 {
+  font-family: var(--diary-font-display);
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--diary-foreground);
+  text-wrap: balance;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.diary-h2 {
+  font-family: var(--diary-font-display);
+  font-size: clamp(20px, 2.6vw, 28px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--diary-foreground);
+}
+.diary-h3 {
+  font-family: var(--diary-font-display);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--diary-foreground);
+}
+.diary-body {
+  font-family: var(--diary-font-primary);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--diary-foreground);
+}
+.diary-body-large {
+  font-family: var(--diary-font-primary);
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--diary-foreground);
+}
+.diary-caption {
+  font-family: var(--diary-font-primary);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+  color: var(--diary-muted-foreground);
+}
+.diary-num {
+  font-family: var(--diary-font-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   通用组件基类
+   ============================================================ */
+body {
+  min-height: 100dvh;
+  background: var(--diary-background);
+  color: var(--diary-foreground);
+  -webkit-font-smoothing: antialiased;
+}
+.diary-card {
+  background: var(--diary-surface);
+  border: 1px solid var(--diary-border);
+  border-radius: var(--diary-radius-large);
+  box-shadow: var(--diary-shadow-1);
+}
+.diary-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--diary-radius-full);
+  background: var(--diary-surface-2);
+  color: var(--diary-foreground);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.diary-chip-primary {
+  background: var(--diary-primary-soft);
+  color: var(--diary-primary-strong);
+}
+.chip-warn { background: color-mix(in srgb, var(--state-warning) 18%, transparent); color: color-mix(in srgb, var(--state-warning) 65%, var(--diary-foreground)); }
+.chip-ok { background: color-mix(in srgb, var(--state-success) 18%, transparent); color: color-mix(in srgb, var(--state-success) 60%, var(--diary-foreground)); }
+
+/* ---------- 底部导航（SPA 固定悬浮 + 底部安全区） ---------- */
+nav[data-mobile-nav="global"] {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  width: 100%;
+  max-width: 28rem;
+  margin-inline: auto;
+  border-top: 1px solid var(--diary-border);
+  background: var(--diary-surface);
+  padding-bottom: var(--safe-bottom, 0px);
+}
+/* 键盘弹出时隐藏底部固定元素（配合 js/ui/viewport.js） */
+.kb-open nav[data-mobile-nav="global"] { display: none; }
+.kb-open .kb-hide { display: none; }
+
+/* ---------- 视口与安全区（文档第三章：先做布局基础） ---------- */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: light;
+}
+html.dark { color-scheme: dark; }
+.safe-pt { padding-top: var(--safe-top); }
+
+/* ---------- 工具 ---------- */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+[data-icon] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  background-color: currentColor;
+}
+
+/* ============================================================
+   语义工具类回退（Tailwind 未及生效前保证可读）
+   ============================================================ */
+.bg-background { background-color: var(--diary-background); }
+.text-background { color: var(--diary-background); }
+.border-background { border-color: var(--diary-background); }
+.ring-background { --tw-ring-color: var(--diary-background); }
+.bg-foreground { background-color: var(--diary-foreground); }
+.text-foreground { color: var(--diary-foreground); }
+.border-foreground { border-color: var(--diary-foreground); }
+.ring-foreground { --tw-ring-color: var(--diary-foreground); }
+.bg-card { background-color: var(--diary-card); }
+.text-card { color: var(--diary-card); }
+.border-card { border-color: var(--diary-card); }
+.ring-card { --tw-ring-color: var(--diary-card); }
+.bg-card-foreground { background-color: var(--diary-card-foreground); }
+.text-card-foreground { color: var(--diary-card-foreground); }
+.border-card-foreground { border-color: var(--diary-card-foreground); }
+.ring-card-foreground { --tw-ring-color: var(--diary-card-foreground); }
+.bg-popover { background-color: var(--diary-popover); }
+.text-popover { color: var(--diary-popover); }
+.border-popover { border-color: var(--diary-popover); }
+.ring-popover { --tw-ring-color: var(--diary-popover); }
+.bg-popover-foreground { background-color: var(--diary-popover-foreground); }
+.text-popover-foreground { color: var(--diary-popover-foreground); }
+.border-popover-foreground { border-color: var(--diary-popover-foreground); }
+.ring-popover-foreground { --tw-ring-color: var(--diary-popover-foreground); }
+.bg-primary { background-color: var(--diary-primary); }
+.text-primary { color: var(--diary-primary); }
+.border-primary { border-color: var(--diary-primary); }
+.ring-primary { --tw-ring-color: var(--diary-primary); }
+.bg-primary-foreground { background-color: var(--diary-primary-foreground); }
+.text-primary-foreground { color: var(--diary-primary-foreground); }
+.border-primary-foreground { border-color: var(--diary-primary-foreground); }
+.ring-primary-foreground { --tw-ring-color: var(--diary-primary-foreground); }
+.bg-muted { background-color: var(--diary-muted); }
+.text-muted { color: var(--diary-muted); }
+.border-muted { border-color: var(--diary-muted); }
+.ring-muted { --tw-ring-color: var(--diary-muted); }
+.bg-muted-foreground { background-color: var(--diary-muted-foreground); }
+.text-muted-foreground { color: var(--diary-muted-foreground); }
+.border-muted-foreground { border-color: var(--diary-muted-foreground); }
+.ring-muted-foreground { --tw-ring-color: var(--diary-muted-foreground); }
+.bg-border { background-color: var(--diary-border); }
+.text-border { color: var(--diary-border); }
+.border-border { border-color: var(--diary-border); }
+.ring-border { --tw-ring-color: var(--diary-border); }
+.bg-input { background-color: var(--diary-input); }
+.text-input { color: var(--diary-input); }
+.border-input { border-color: var(--diary-input); }
+.ring-input { --tw-ring-color: var(--diary-input); }
+.bg-ring { background-color: var(--diary-ring); }
+.text-ring { color: var(--diary-ring); }
+.border-ring { border-color: var(--diary-ring); }
+.ring-ring { --tw-ring-color: var(--diary-ring); }
+
+/* ============================================================
+   分类色板（palette，与 js/config/constants.js 保持一致）
+   ============================================================ */
+.cat-work{--c:#ff8a7a} .cat-study{--c:#7fb5d9} .cat-rest{--c:#b9a6e8}
+.cat-play{--c:#7bc8a4} .cat-sport{--c:#f2b86b} .cat-read{--c:#e893b6}
+.cat-mist{--c:#9aa5b1}
+.cat-dot { width: 26px; height: 26px; border-radius: 9999px; background: var(--c); }
+
+/* ---------- 记录编辑：分类选择 ---------- */
+.cat-option { transition: border-color .15s ease, background-color .15s ease, transform .15s ease; }
+.cat-option:hover { transform: translateY(-1px); }
+.cat-selected { border-color: var(--diary-primary) !important; background: var(--diary-primary-soft) !important; box-shadow: 0 0 0 2px var(--diary-ring); }
+
+/* ---------- 分类管理：颜色样本 ---------- */
+.swatch { width: 30px; height: 30px; border-radius: 9999px; border: 2px solid transparent; transition: transform .15s ease, border-color .15s ease; }
+.swatch:hover { transform: translateY(-1px); }
+.swatch-active { border-color: var(--diary-surface); box-shadow: 0 0 0 2px var(--diary-primary); }
+.sw-coral{background:#ff8a7a} .sw-blue{background:#7fb5d9} .sw-lavender{background:#b9a6e8}
+.sw-mint{background:#7bc8a4} .sw-apricot{background:#f2b86b} .sw-sakura{background:#e893b6}
+.sw-mist{background:#9aa5b1}
+
+/* ---------- 心情选择 ---------- */
+.mood-chip { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 9999px; border: 1px solid var(--diary-border); background: var(--diary-surface); color: var(--diary-muted-foreground); font-size: 12px; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+.mood-chip:hover { background: var(--diary-surface-2); }
+.mood-active { background: var(--diary-primary-soft); border-color: var(--diary-primary); color: var(--diary-primary-strong); font-weight: 500; }
+
+/* ---------- 开关 ---------- */
+.toggle { position: relative; display: inline-flex; width: 46px; height: 26px; border-radius: 9999px; background: var(--diary-muted-foreground); transition: background-color .2s ease; cursor: pointer; }
+.toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 9999px; background: var(--diary-surface); transition: transform .2s ease; }
+.toggle.on { background: var(--diary-primary); }
+.toggle.on::after { transform: translateX(20px); }
+
+/* ---------- 目标编辑：分类 pill ---------- */
+.cat-pill { display: inline-flex; align-items: center; height: 30px; padding: 0 14px; border-radius: 9999px; border: 1px solid var(--diary-border); background: var(--diary-surface); color: var(--diary-muted-foreground); font-size: 13px; transition: background-color .15s ease, color .15s ease, border-color .15s ease; }
+.cat-pill:hover { background: var(--diary-surface-2); }
+.cat-pill-selected { background: var(--diary-primary-soft); border-color: var(--diary-primary); color: var(--diary-primary-strong); font-weight: 500; }
+
+/* ---------- 个人资料行 ---------- */
+.profile-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 13px 16px; background: transparent; text-align: left; transition: background-color 0.18s ease; }
+.profile-row + .profile-row { border-top: 1px solid var(--diary-border); }
+.profile-row:hover { background: var(--diary-surface-2); }
+.profile-row-icon { flex-shrink: 0; width: 36px; height: 36px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; background: var(--diary-surface-2); color: var(--diary-primary-strong); transition: background-color 0.18s ease; }
+.profile-row:hover .profile-row-icon { background: var(--diary-surface); }
+.profile-row-title { display: block; font-size: 15px; font-weight: 600; line-height: 1.35; color: var(--diary-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.profile-row-desc { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.4; color: var(--diary-muted-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.profile-row-chevron { flex-shrink: 0; color: var(--diary-muted-foreground); transition: transform 0.18s ease; }
+.profile-row:hover .profile-row-chevron { transform: translateX(2px); }
+.profile-row-badge { flex-shrink: 0; font-size: 12px; font-weight: 500; color: var(--diary-primary-strong); white-space: nowrap; }
+
+/* ============================================================
+   通知服务（toast / confirm）—— services/notify.js 使用
+   ============================================================ */
+.td-toast-wrap { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 90; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; width: max-content; max-width: calc(100vw - 32px); }
+.td-toast { max-width: 100%; padding: 10px 16px; border-radius: var(--diary-radius-medium); background: color-mix(in srgb, var(--diary-foreground) 92%, transparent); color: var(--diary-background); font-size: 13px; line-height: 1.5; box-shadow: var(--diary-shadow-2); opacity: 0; transform: translateY(6px); transition: opacity .18s ease, transform .18s ease; }
+.td-toast.show { opacity: 1; transform: translateY(0); }
+.td-toast.td-toast-error { background: color-mix(in srgb, var(--state-error) 92%, transparent); color: #fff; }
+.td-overlay { position: fixed; inset: 0; z-index: 80; background: rgba(30, 18, 14, 0.45); display: flex; align-items: center; justify-content: center; padding: 24px; }
+.td-dialog { width: 100%; max-width: 320px; padding: 20px; border-radius: var(--diary-radius-large); background: var(--diary-surface); border: 1px solid var(--diary-border); box-shadow: var(--diary-shadow-3); }
+.td-dialog-title { font-size: 15px; font-weight: 600; color: var(--diary-foreground); }
+.td-dialog-msg { margin-top: 8px; font-size: 13px; line-height: 1.6; color: var(--diary-muted-foreground); white-space: pre-line; }
+.td-dialog-actions { margin-top: 16px; display: flex; gap: 10px; }
+.td-dialog-btn { flex: 1; height: 40px; border-radius: var(--diary-radius-medium); font-size: 14px; font-weight: 600; border: 1px solid var(--diary-border); background: var(--diary-surface-2); color: var(--diary-foreground); cursor: pointer; }
+.td-dialog-btn-primary { background: var(--diary-primary); border-color: var(--diary-primary); color: var(--diary-primary-ink); }
+.td-dialog-btn-danger { background: var(--state-error); border-color: var(--state-error); color: #fff; }
+
+/* ---------- 动效降级 ----------
+ * 注意：小米等机型系统"动画缩放"关闭/为 null 时，WebView 会上报
+ * prefers-reduced-motion: reduce。页面切换动效（anim-*）属于导航反馈，
+ * 不在此禁用；仅禁用装饰性过渡与动画。 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+  .animate-ping { animation: none !important; }
+}
+
+/* ============================================================
+   SPA 壳（index.html）：页面滚动容器 + 切换动效
+   动画只用 transform/opacity，200-300ms ease-out（文档第四章）
+   ============================================================ */
+#app {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--diary-background);
+}
+.page-view {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;   /* 文档第五章：列表滚动优化 */
+  overscroll-behavior: contain;        /* 防滚动穿透 */
+  background: var(--diary-background);
+  /* 底部留出固定导航 + 安全区，避免最后一条被盖（文档第三章） */
+  padding-bottom: calc(84px + var(--safe-bottom, 0px));
+  scrollbar-width: none;
+}
+.page-view::-webkit-scrollbar { width: 0; height: 0; }
+.page-view.leaving { z-index: 1; pointer-events: none; }
+.page-locked { pointer-events: none; } /* 动画期间锁定输入，防重复点击叠层 */
+
+@keyframes td-slide-fwd-in  { from { transform: translateX(36px);  opacity: 0; } to { transform: translateX(0);     opacity: 1; } }
+@keyframes td-slide-fwd-out { from { transform: translateX(0);     opacity: 1; } to { transform: translateX(-28px); opacity: 0; } }
+@keyframes td-slide-back-in { from { transform: translateX(-36px); opacity: 0; } to { transform: translateX(0);     opacity: 1; } }
+@keyframes td-slide-back-out{ from { transform: translateX(0);     opacity: 1; } to { transform: translateX(28px);  opacity: 0; } }
+.anim-fwd-in  { animation: td-slide-fwd-in  260ms ease-out both; }
+.anim-fwd-out { animation: td-slide-fwd-out 260ms ease-out both; }
+.anim-back-in { animation: td-slide-back-in 260ms ease-out both; }
+.anim-back-out{ animation: td-slide-back-out 260ms ease-out both; }
+
+/* ---------- 暗色模式切换过渡（文档第八章：只过渡颜色，150-250ms） ---------- */
+.theme-switching, .theme-switching *, .theme-switching *::before, .theme-switching *::after {
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, fill .2s ease, stroke .2s ease !important;
+}

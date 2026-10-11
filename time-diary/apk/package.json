@@ -1,0 +1,13 @@
+{
+  "name": "time-diary-apk",
+  "private": true,
+  "version": "1.2.1",
+  "description": "时间日记 Android 壳（Capacitor）",
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  }
+}
