@@ -34,6 +34,7 @@
 # 1) F:\android-build-tools\jdk-21.0.2        （OpenJDK 21，来自华为云镜像）
 # 2) F:\android-build-tools\android-sdk       （cmdline-tools + platforms;android-35 + build-tools;35.0.0）
 # 3) cd apk && npm install
+# 4) cd apk && npx cap add android            （fresh clone 必需：仓库不含 android/ 目录，含签名配置）
 
 # 一键打包（在 apk/ 目录）：
 powershell -ExecutionPolicy Bypass -File tools\build-apk.ps1            # debug 包，直接可安装

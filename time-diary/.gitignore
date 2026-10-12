@@ -1,7 +1,16 @@
 # 构建产物 / 安装包
 *.apk
 
-# 生成过程中间产物（不入库）
+# Capacitor 工程与依赖（fresh clone 后在 apk/ 下执行 npx cap add android 重建）
+apk/node_modules/
+apk/www/
+apk/android/
+
+# 签名材料（严禁入库）
+apk/resources/*.keystore
+apk/keystore.properties
+
+# 设计画布 / 生成中间产物（历史遗留条目，保留兼容）
 .preflight/
 generation-tree.json
 runtime-dispatch-manifest.json
