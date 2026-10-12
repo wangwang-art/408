@@ -29,7 +29,7 @@
 
 ## 打包 Android APK
 
-用 [Capacitor](https://capacitorjs.com) 把网页套成原生应用，工程在 `apk/`。工具链（JDK 21、Android SDK、Gradle 缓存）全部固定在 `F:\android-build-tools\`，不占用 C 盘。
+用 [Capacitor](https://capacitorjs.com) 把网页套成原生应用，工程在 `apk/`。工具链位置**可移植**：默认 `F:\android-build-tools\`，换机时用 `-ToolsDir` 参数或环境变量 `TD_BUILD_TOOLS` 指定，JDK 自动探测（也可 `-JdkPath` / `TD_JDK` 指定），不占用 C 盘。
 
 ```powershell
 # 一次性准备（已完成则跳过）：

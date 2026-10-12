@@ -1,20 +1,38 @@
-# 时间日记 · 一键打包 Android APK（全套工具链固定在 F 盘，不碰 C 盘）
+# 时间日记 · 一键打包 Android APK（工具链位置可移植：参数/环境变量优先，默认 F 盘）
 # 用法:
 #   powershell -ExecutionPolicy Bypass -File tools\build-apk.ps1            # debug 包（直接可装）
 #   powershell -ExecutionPolicy Bypass -File tools\build-apk.ps1 -Release   # release 包（自动生成签名）
-param([switch]$Release)
+# 工具链位置（换机时改其一即可，优先级从高到低）：
+#   -ToolsDir 参数 > 环境变量 TD_BUILD_TOOLS > 默认 F:\android-build-tools
+#   -JdkPath  参数 > 环境变量 TD_JDK       > $ToolsDir 下 jdk-21* 自动探测
+param(
+    [switch]$Release,
+    [string]$ToolsDir,
+    [string]$JdkPath
+)
 $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 $apk = Split-Path $PSScriptRoot -Parent
 $ver = (Get-Content (Join-Path $apk 'package.json') -Raw | ConvertFrom-Json).version
 
-# ---------- F 盘工具链 ----------
-$tools = 'F:\android-build-tools'
-$jdk   = Join-Path $tools 'jdk-21.0.2'
-$sdk   = Join-Path $tools 'android-sdk'
-if (-not (Test-Path (Join-Path $jdk 'bin\java.exe'))) { Write-Host "[ERROR] 缺少 JDK21: $jdk" -ForegroundColor Red; exit 1 }
-if (-not (Test-Path (Join-Path $sdk 'platforms\android-35'))) { Write-Host "[ERROR] 缺少 Android SDK 平台，请先运行 sdkmanager 安装" -ForegroundColor Red; exit 1 }
+# ---------- 工具链定位（可移植） ----------
+if (-not $ToolsDir) { $ToolsDir = $env:TD_BUILD_TOOLS }
+if (-not $ToolsDir) { $ToolsDir = 'F:\android-build-tools' }
+$tools = $ToolsDir
+$sdk = Join-Path $tools 'android-sdk'
+
+if (-not $JdkPath) { $JdkPath = $env:TD_JDK }
+if (-not $JdkPath) {
+    $cand = Get-ChildItem $tools -Directory -Filter 'jdk-21*' -ErrorAction SilentlyContinue |
+        Sort-Object Name -Descending | Select-Object -First 1
+    if ($cand) { $JdkPath = $cand.FullName }
+}
+if (-not $JdkPath -and $env:JAVA_HOME -and (Test-Path (Join-Path $env:JAVA_HOME 'bin\java.exe'))) { $JdkPath = $env:JAVA_HOME }
+$jdk = $JdkPath
+
+if (-not $jdk -or -not (Test-Path (Join-Path $jdk 'bin\java.exe'))) { Write-Host "[ERROR] 缺少 JDK21（已尝试: '$jdk'；可用 -JdkPath 或环境变量 TD_JDK 指定）" -ForegroundColor Red; exit 1 }
+if (-not (Test-Path (Join-Path $sdk 'platforms\android-35'))) { Write-Host "[ERROR] 缺少 Android SDK 平台: $sdk（可用 -ToolsDir 或环境变量 TD_BUILD_TOOLS 指定）" -ForegroundColor Red; exit 1 }
 
 $env:JAVA_HOME = $jdk
 $env:ANDROID_HOME = $sdk
