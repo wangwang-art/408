@@ -74,6 +74,10 @@
     /* 自动补录：新记录默认开始时间允许回接上一条结束时间的最大间隔 */
     AUTOFILL_GAP_MS: 24 * 60 * 60 * 1000,
 
+    /* AI 洞察（预留接口，默认关闭；启用方式见 js/services/ai.js 头注释。
+     * 注意：apiKey 建议将来存设置而非写死在此文件，且严禁提交真实密钥入库） */
+    AI: { enabled: false, endpoint: '', model: '', apiKey: '' },
+
     /* 兜底分类（记录引用了已归档分类时显示） */
     FALLBACK_CATEGORY: { id: '__deleted__', name: '已删除', color: '#9aa5b1' }
   };

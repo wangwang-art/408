@@ -25,6 +25,8 @@
 - 手机端适配：安全区（刘海/Home Indicator）、键盘弹出隐藏底栏、横竖屏防抖重算
 - 跑领域层测试（可选）：`node tests/run.js`
 
+**接口与扩展点全览**（分层接口签名、存储 schema、扩展方式）：见 [docs/接口与扩展点.md](docs/接口与扩展点.md)
+
 ## 打包 Android APK
 
 用 [Capacitor](https://capacitorjs.com) 把网页套成原生应用，工程在 `apk/`。工具链（JDK 21、Android SDK、Gradle 缓存）全部固定在 `F:\android-build-tools\`，不占用 C 盘。

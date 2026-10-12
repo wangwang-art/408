@@ -114,6 +114,7 @@
     }).join('') || '<li class="py-4 text-center diary-caption">该周期还没有记录</li>';
 
     /* ---------- 洞察 ---------- */
+    /* 当前为规则版文案；AI 备选：await TD.AI.analyze(summary)（签名一致，见 services/ai.js） */
     var ongoing = await root.TD.Repo.records.ongoing();
     var insights = root.TD.Domain.stats.insights(summary, {
       ongoingCategoryName: ongoing ? findCat(ongoing.categoryId).name : null
