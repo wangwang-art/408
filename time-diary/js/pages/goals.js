@@ -50,11 +50,13 @@
   root.TD.Pages.goals = async function (settings) {
     var $ = function (id) { return document.getElementById(id); };
     var UI = root.TD.UI, DU = root.TD.DateUtil, F = root.TD.Format, G = root.TD.Domain.goals;
+    var token = UI.pageToken();
 
     var now = Date.now();
     var goals = await root.TD.Repo.goals.list();
     var records = await root.TD.Repo.records.list();
     var cats = await root.TD.Repo.categories.list();
+    if (!UI.still(token)) return; /* 离开本页后放弃 DOM 写入（文档 3.2/3.4） */
     var findCat = UI.catFinder(cats);
 
     /* ---------- 本周概览 ---------- */

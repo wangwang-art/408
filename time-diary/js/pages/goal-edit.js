@@ -70,10 +70,12 @@
   root.TD.Pages.goalEdit = async function () {
     var $ = function (id) { return document.getElementById(id); };
     var UI = root.TD.UI, N = root.TD.Notify, DU = root.TD.DateUtil;
+    var token = UI.pageToken();
 
     var q = UI.query();
     var editing = q.id ? await root.TD.Repo.goals.get(q.id) : null;
     var cats = await root.TD.Repo.categories.active();
+    if (!UI.still(token)) return;
     var selectedCat = editing ? editing.categoryId : (cats[0] ? cats[0].id : null);
     var period = editing ? editing.period : 'daily';
     var type = editing ? (editing.type || 'duration') : 'duration';

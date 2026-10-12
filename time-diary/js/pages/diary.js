@@ -44,10 +44,12 @@
   root.TD.Pages.diary = async function () {
     var $ = function (id) { return document.getElementById(id); };
     var UI = root.TD.UI, DU = root.TD.DateUtil, N = root.TD.Notify;
+    var token = UI.pageToken();
 
     var q = UI.query();
     var dateKey = DU.keyToTs(q.date) ? q.date : DU.dateKey(Date.now());
     var diary = await root.TD.Repo.diaries.byDateKey(dateKey);
+    if (!UI.still(token)) return;
     var mood = diary ? diary.mood : null;
     var saveHandle = null;
     var dirty = false;
@@ -122,7 +124,9 @@
 
     /* ---------- 当日时间记录关联（按日期推导，非外键） ---------- */
     var records = await root.TD.Repo.records.list();
+    if (!UI.still(token)) return;
     var cats = await root.TD.Repo.categories.list();
+    if (!UI.still(token)) return;
     var findCat = UI.catFinder(cats);
     var dayTs = DU.keyToTs(dateKey);
     var byCat = root.TD.Domain.records.byCategory(records, dayTs, DU.endOfDay(dayTs), Date.now());

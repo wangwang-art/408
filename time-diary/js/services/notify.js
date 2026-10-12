@@ -7,6 +7,7 @@
 
   var toastWrap = null;
   var openDialog = null; /* 当前打开的 confirm 弹层 */
+  var lastToast = { msg: '', at: 0 }; /* 文档 3.6：同一错误提示只出现一次，不叠加 */
 
   function ensureWrap() {
     if (!toastWrap || !document.body.contains(toastWrap)) {
@@ -44,6 +45,9 @@
 
   root.TD.Notify = {
     toast: function (msg, type) {
+      var now = Date.now();
+      if (msg === lastToast.msg && now - lastToast.at < 2500) return; /* 同消息 2.5s 内去重 */
+      lastToast = { msg: msg, at: now };
       var wrap = ensureWrap();
       var el = document.createElement('div');
       el.className = 'td-toast' + (type === 'error' ? ' td-toast-error' : '');

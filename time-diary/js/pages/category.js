@@ -31,6 +31,7 @@
   root.TD.Pages.category = async function () {
     var $ = function (id) { return document.getElementById(id); };
     var UI = root.TD.UI, F = root.TD.Format, N = root.TD.Notify;
+    var token = UI.pageToken();
     var selectedColor = root.TD.Config.PALETTE[0];
 
     function renderSwatches() {
@@ -60,6 +61,7 @@
       segs.forEach(function (s) { mins[s.rec.categoryId] = (mins[s.rec.categoryId] || 0) + s.minutes; });
 
       var ul = $('cat-list');
+      if (!UI.still(token) || !ul) return;
       if (!active.length) {
         ul.innerHTML = '<li class="px-3 py-6 text-center diary-caption">还没有分类，先在下方添加一个</li>';
         return;

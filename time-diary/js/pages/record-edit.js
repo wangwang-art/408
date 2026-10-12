@@ -42,10 +42,12 @@
   root.TD.Pages.recordEdit = async function () {
     var $ = function (id) { return document.getElementById(id); };
     var UI = root.TD.UI, DU = root.TD.DateUtil, F = root.TD.Format, N = root.TD.Notify;
+    var token = UI.pageToken();
 
     var q = UI.query();
     var cats = await root.TD.Repo.categories.active();
     var editing = q.id ? await root.TD.Repo.records.get(q.id) : null;
+    if (!UI.still(token)) return;
     var selectedCat = (editing && editing.categoryId) || q.cat || null;
     var timerHandle = null;
 
@@ -178,6 +180,7 @@
 
     renderCats();
     await fillTimes();
+    if (!UI.still(token)) return;
     refreshDuration();
     $('rec-start').addEventListener('input', refreshDuration);
     $('rec-end').addEventListener('input', refreshDuration);

@@ -83,12 +83,14 @@
   root.TD.Pages.timeline = async function (settings) {
     var $ = function (id) { return document.getElementById(id); };
     var UI = root.TD.UI, DU = root.TD.DateUtil, F = root.TD.Format, N = root.TD.Notify;
+    var token = UI.pageToken();
 
     var todayKey = DU.dateKey(Date.now());
     var dateKey = DU.keyToTs(q_date()) ? q_date() : todayKey;
     function q_date() { return UI.query().date; }
 
     var records = await root.TD.Repo.records.list();
+    if (!UI.still(token)) return;
     var cats = await root.TD.Repo.categories.list();
     var findCat = UI.catFinder(cats);
 
@@ -110,6 +112,7 @@
     var bar = $('timeline-bar');
     var blocks = root.TD.Domain.records.timelineBlocks(records, dayTs, isToday ? now : DU.endOfDay(dayTs));
     var ongoing = await root.TD.Repo.records.ongoing();
+    if (!UI.still(token)) return;
 
     /* 概览右侧：进行中卡片 */
     var oc = $('ongoing-card');

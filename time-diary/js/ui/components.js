@@ -11,8 +11,18 @@
     },
 
     icons: function () {
-      if (root.lucide && typeof root.lucide.createIcons === 'function') root.lucide.createIcons();
+      /* lucide 对并发/已分离 DOM 会抛 null.setAttribute（文档 3.4），吞掉即可 */
+      try {
+        if (root.lucide && typeof root.lucide.createIcons === 'function') root.lucide.createIcons();
+      } catch (err) {
+        console.warn('[icons] 跳过一次图标渲染:', err && err.message);
+      }
     },
+
+    /** 页面生命周期令牌：页面 init 开头取 UI.pageToken()，await 后用 UI.still(token) 自查；
+     *  路由器每次渲染都会更换令牌，离开本页后 still() 返回 false（文档 3.2/3.4）。 */
+    pageToken: function () { return root.TD._pageToken || null; },
+    still: function (token) { return root.TD._pageToken === token && token !== null; },
 
     /** 跳转：统一走路由器（hash + 压历史 + 动效）；路由器未就绪时回退直跳 */
     go: function (routeKey, params) {

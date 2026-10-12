@@ -379,12 +379,14 @@ html.dark { color-scheme: dark; }
 }
 .page-view::-webkit-scrollbar { width: 0; height: 0; }
 .page-view.leaving { z-index: 1; pointer-events: none; }
-.page-locked { pointer-events: none; } /* 动画期间锁定输入，防重复点击叠层 */
+/* 动画期间锁定输入（文档 3.5）：body 级标记连底部导航一起锁，防止快速连点叠层 */
+body.page-locked, body.page-locked #app, body.page-locked nav[data-mobile-nav="global"] { pointer-events: none; }
 
 @keyframes td-slide-fwd-in  { from { transform: translateX(36px);  opacity: 0; } to { transform: translateX(0);     opacity: 1; } }
-@keyframes td-slide-fwd-out { from { transform: translateX(0);     opacity: 1; } to { transform: translateX(-28px); opacity: 0; } }
+/* 退出动画只位移不渐隐：旧页保持不透明滑出，避免动画中段两页半透明互相透视（文档 3.3） */
+@keyframes td-slide-fwd-out { to { transform: translateX(-28px); } }
 @keyframes td-slide-back-in { from { transform: translateX(-36px); opacity: 0; } to { transform: translateX(0);     opacity: 1; } }
-@keyframes td-slide-back-out{ from { transform: translateX(0);     opacity: 1; } to { transform: translateX(28px);  opacity: 0; } }
+@keyframes td-slide-back-out{ to { transform: translateX(28px); } }
 .anim-fwd-in  { animation: td-slide-fwd-in  260ms ease-out both; }
 .anim-fwd-out { animation: td-slide-fwd-out 260ms ease-out both; }
 .anim-back-in { animation: td-slide-back-in 260ms ease-out both; }

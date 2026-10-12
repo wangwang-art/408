@@ -40,6 +40,7 @@
   root.TD.Pages.stats = async function (settings) {
     var $ = function (id) { return document.getElementById(id); };
     var UI = root.TD.UI, DU = root.TD.DateUtil, F = root.TD.Format;
+    var token = UI.pageToken();
 
     var PERIODS = { day: '今日', week: '本周', month: '本月' };
     var period = PERIODS[UI.query().p] ? UI.query().p : 'week';
@@ -70,6 +71,7 @@
 
     var records = await root.TD.Repo.records.list();
     var cats = await root.TD.Repo.categories.list();
+    if (!UI.still(token)) return; /* 离开本页后放弃 DOM 写入（文档 3.2/3.4） */
     var findCat = UI.catFinder(cats);
 
     var segs = root.TD.Domain.records.segments(records, range.start, range.end, now);
