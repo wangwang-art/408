@@ -1,25 +1,23 @@
-/* UI 层：hash 路由器（文档第二章：统一路由层；二轮优化：并发合并 + 生命周期对齐）
+/* UI 层：hash 路由器（统一路由层；三轮优化：立即切换 + 仅入场动画）
  * - 跳转压历史，首次进入 replace（返回键不回空白页、不直接退出）
- * - 方向标记：前进/后退决定切换动效方向
- * - 动画期间新导航只保留最后一次目标（合并，不排队不叠加）
- * - 清理由 animationend 驱动、定时器兜底；每次切页移除所有非当前视图
+ * - 方向标记：前进/后退决定入场动画方向（前进右入、后退左入）
+ * - 即时渲染：旧页立刻移除、新页立刻挂载，无叠层窗口期——快速连点天然安全，
+ *   最后一次点击必胜，无输入锁、无排队（二轮的串行退出动画导致点击延迟，已废弃）
  * - 页面生命周期令牌：TD._pageToken，页面 await 后自查，离开即失效
- * - 输入锁定 body 级（连底部导航），异常时必解锁 */
+ * - 保留：弹窗压历史（notify）、滚动位置按路由恢复、异常兜底 */
 (function (root) {
   'use strict';
   root.TD = root.TD || {};
 
   var STACK_KEY = 'td:routestack';
   var SCROLL_KEY = 'td:scrollpos';
-  var ANIM_MS = 260;
+  var ANIM_MS = 220;
 
   var state = {
     current: null,      /* 当前路由 {key, params, hash} */
     stack: [],          /* hash 栈（sessionStorage 持久，支持刷新恢复） */
     pending: null,      /* 程序发起跳转的标记：'fwd' | 'replace' */
-    direction: 'none',  /* 本次渲染的动效方向：'fwd' | 'back' | 'none' */
-    animating: false,
-    dirty: false        /* 动画期间 hash 又变了 → 结束后按实时 hash 对账渲染 */
+    direction: 'none'   /* 本次渲染的入场方向：'fwd' | 'back' | 'none' */
   };
 
   function kebab(key) {
@@ -72,10 +70,7 @@
     } catch (e) { /* 忽略 */ }
   }
 
-  function lock() { document.body.classList.add('page-locked'); state.animating = true; }
-  function unlock() { document.body.classList.remove('page-locked'); state.animating = false; }
-
-  /** 渲染目标页面（统一入口；动画期间被合并的导航在动画结束后从这里续跑） */
+  /** 渲染目标页面（统一入口；即时切换，仅新页入场动画） */
   function render(route) {
     var app = document.getElementById('app');
     var tpl = root.TD.TPL && root.TD.TPL[route.key];
@@ -101,13 +96,11 @@
       view.className = 'page-view';
       view.innerHTML = tpl;
       app.appendChild(view);
-      state.current = route;
-
-      /* 旧视图全部标记退出（含此前泄漏的中间层），统一由 finish 移除 */
-      var oldViews = [];
+      /* 旧页立即移除（含此前任何残留）：DOM 中永远只有当前页，无叠层、无透视 */
       Array.prototype.forEach.call(app.querySelectorAll('.page-view'), function (v) {
-        if (v !== view) { v.classList.add('leaving'); oldViews.push(v); }
+        if (v !== view) v.remove();
       });
+      state.current = route;
 
       root.TD.UI.renderNav(route.key);
       document.title = (root.TD.TITLES && root.TD.TITLES[route.key]) || '时间日记';
@@ -127,49 +120,32 @@
           root.TD.Notify.toast('页面加载出错：' + (err && err.message), 'error');
         });
 
-      /* 动效：方向决定进出场；旧页只位移不渐隐（不透视） */
+      /* 入场动画（仅新页；方向由导航栈决定） */
       var dir = state.direction || 'none';
       var animIn = (dir !== 'none') ? (dir === 'back' ? 'anim-back-in' : 'anim-fwd-in') : null;
-      var animOut = animIn ? (dir === 'back' ? 'anim-back-out' : 'anim-fwd-out') : null;
-
-      if (animIn) view.classList.add(animIn);
-      if (animOut) {
-        oldViews.forEach(function (v) { v.classList.add(animOut); });
-        lock(); /* 文档 3.5：动画期间锁输入（body 级，含导航） */
-      }
-
-      /* 清理：animationend 驱动（文档 3.3），定时器兜底防事件不触发；只执行一次 */
-      var finished = false;
-      function finish() {
-        if (finished) return;
-        finished = true;
-        Array.prototype.forEach.call(app.querySelectorAll('.page-view.leaving'), function (v) { v.remove(); });
-        if (animIn) view.classList.remove(animIn);
-        unlock();
-        /* 滚动恢复放在动效结束后（文档第四/六章） */
-        if (animIn === 'anim-back-in') {
-          var top = loadScroll()[route.hash];
-          if (typeof top === 'number') view.scrollTop = top;
+      if (animIn) {
+        view.classList.add(animIn);
+        var finished = false;
+        function finish() {
+          if (finished) return;
+          finished = true;
+          view.classList.remove(animIn);
+          /* 返回时恢复滚动位置（文档第六章） */
+          if (animIn === 'anim-back-in') {
+            var top = loadScroll()[route.hash];
+            if (typeof top === 'number') view.scrollTop = top;
+          }
         }
-        /* 合并导航（文档 3.1）：以 location.hash 实时值为准对账，避免快照过期 */
-        if (state.dirty) {
-          state.dirty = false;
-          var live = parseHash(root.location.hash);
-          if (!state.current || live.hash !== state.current.hash) render(live);
-        }
-      }
-
-      if (animOut) {
         view.addEventListener('animationend', finish, { once: true });
-        setTimeout(finish, ANIM_MS + 120); /* 兜底：动画事件未触发也能清理 */
+        setTimeout(finish, ANIM_MS + 120); /* 兜底：动画事件未触发也能收尾 */
       } else {
-        finish();
+        /* 无动画（首次/replace）：滚动恢复直接做 */
+        var top0 = loadScroll()[route.hash];
+        if (typeof top0 === 'number') view.scrollTop = top0;
       }
     } catch (err) {
-      /* 文档 3.6：渲染异常必须清锁回稳，避免永远锁死 */
       console.error('[router] 渲染失败', err);
       root.TD.Notify.toast('页面加载出错：' + (err && err.message), 'error');
-      unlock();
     }
   }
 
@@ -198,13 +174,7 @@
       state.stack.push(route.hash);
     }
     saveStack();
-
-    /* 并发合并（文档 3.1）：动画进行中不再渲染，仅记账；结束后按实时 hash 对账续跑 */
-    if (state.animating) {
-      state.dirty = true;
-      return;
-    }
-    render(route);
+    render(route); /* 即时渲染：每次 hashchange 立即生效，最后一次点击必胜 */
   }
 
   function onPopState(ev) {
@@ -212,7 +182,7 @@
     if (s.tdDialog) return; /* 弹窗层历史，由 Notify 处理 */
   }
 
-  /** 程序跳转：压历史（前进动效） */
+  /** 程序跳转：压历史（前进入场） */
   function go(key, params) {
     var target = href(key, params);
     if (target === root.location.hash) return;
@@ -220,7 +190,7 @@
     root.location.hash = target;
   }
 
-  /** 替换当前历史（无动效；首次进入/守卫重定向用） */
+  /** 替换当前历史（无动画；首次进入/守卫重定向用） */
   function replace(key, params) {
     var target = href(key, params);
     state.pending = 'replace';
@@ -252,8 +222,6 @@
     state.stack = (stored[stored.length - 1] === route.hash) ? stored : [route.hash];
     saveStack();
     state.current = null;
-    state.animating = false;
-    state.dirty = false;
     render(route);
   }
 

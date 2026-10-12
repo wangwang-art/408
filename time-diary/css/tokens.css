@@ -378,19 +378,12 @@ html.dark { color-scheme: dark; }
   scrollbar-width: none;
 }
 .page-view::-webkit-scrollbar { width: 0; height: 0; }
-.page-view.leaving { z-index: 1; pointer-events: none; }
-/* 动画期间锁定输入（文档 3.5）：body 级标记连底部导航一起锁，防止快速连点叠层 */
-body.page-locked, body.page-locked #app, body.page-locked nav[data-mobile-nav="global"] { pointer-events: none; }
 
-@keyframes td-slide-fwd-in  { from { transform: translateX(36px);  opacity: 0; } to { transform: translateX(0);     opacity: 1; } }
-/* 退出动画只位移不渐隐：旧页保持不透明滑出，避免动画中段两页半透明互相透视（文档 3.3） */
-@keyframes td-slide-fwd-out { to { transform: translateX(-28px); } }
-@keyframes td-slide-back-in { from { transform: translateX(-36px); opacity: 0; } to { transform: translateX(0);     opacity: 1; } }
-@keyframes td-slide-back-out{ to { transform: translateX(28px); } }
-.anim-fwd-in  { animation: td-slide-fwd-in  260ms ease-out both; }
-.anim-fwd-out { animation: td-slide-fwd-out 260ms ease-out both; }
-.anim-back-in { animation: td-slide-back-in 260ms ease-out both; }
-.anim-back-out{ animation: td-slide-back-out 260ms ease-out both; }
+/* 入场动画（仅新页；旧页立即移除，无叠层无透视——三轮优化：点击即时响应） */
+@keyframes td-slide-fwd-in  { from { transform: translateX(36px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes td-slide-back-in { from { transform: translateX(-36px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.anim-fwd-in  { animation: td-slide-fwd-in  200ms ease-out both; }
+.anim-back-in { animation: td-slide-back-in 200ms ease-out both; }
 
 /* ---------- 暗色模式切换过渡（文档第八章：只过渡颜色，150-250ms） ---------- */
 .theme-switching, .theme-switching *, .theme-switching *::before, .theme-switching *::after {

@@ -62,7 +62,7 @@
     '<button type="button" id="link-about" class="profile-row">' +
     '<span class="profile-row-icon"><i data-lucide="info" class="h-5 w-5 shrink-0"></i></span>' +
     '<span class="min-w-0 flex-1"><span class="profile-row-title">关于应用</span>' +
-    '<span class="profile-row-desc">版本 1.2.2</span></span>' +
+    '<span class="profile-row-desc">版本 1.2.3</span></span>' +
     '<i data-lucide="chevron-right" class="profile-row-chevron h-4 w-4 shrink-0"></i></button>' +
     '</section>' +
     '<section class="diary-card mt-4 p-4">' +
