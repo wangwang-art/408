@@ -108,7 +108,9 @@ class ComputeScore:
         return sig_poly, bak_poly, ovr_poly
 
     def __call__(self, fpath, sampling_rate, is_personalized_MOS):
-        aud, input_fs = sf.read(fpath)
+        # always_2d + 通道平均：立体声混为单声道，避免 ONNX 输入维度不匹配
+        aud, input_fs = sf.read(fpath, always_2d=True)
+        aud = np.mean(aud, axis=1)
         fs = sampling_rate
         if input_fs != fs:
             try:
@@ -120,12 +122,18 @@ class ComputeScore:
                 audio = _sg.resample_poly(aud, fs, input_fs)
         else:
             audio = aud
+        if len(audio) == 0:
+            raise ValueError(f"音频为空或解码失败，无法评估：{fpath}")
         actual_audio_len = len(audio)
         len_samples = int(INPUT_LENGTH * fs)
-        while len(audio) < len_samples:
-            audio = np.append(audio, audio)
+        if len(audio) < len_samples:
+            # 有界补齐：平铺后截断（原 while 自我倍增写法在空音频时永不退出）
+            audio = np.tile(audio, int(np.ceil(len_samples / len(audio))))[:len_samples]
 
         num_hops = int(np.floor(len(audio) / fs) - INPUT_LENGTH) + 1
+        if num_hops <= 0:
+            raise ValueError(
+                f"音频过短（{len(audio) / fs:.2f}s < {INPUT_LENGTH}s），无法切出完整评估片段：{fpath}")
         hop_len_samples = fs
         predicted_mos_sig_seg_raw = []
         predicted_mos_bak_seg_raw = []
