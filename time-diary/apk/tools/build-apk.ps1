@@ -3,7 +3,7 @@
 #   powershell -ExecutionPolicy Bypass -File tools\build-apk.ps1            # debug 包（直接可装）
 #   powershell -ExecutionPolicy Bypass -File tools\build-apk.ps1 -Release   # release 包（自动生成签名）
 # 工具链位置（换机时改其一即可，优先级从高到低）：
-#   -ToolsDir 参数 > 环境变量 TD_BUILD_TOOLS > 默认 F:\android-build-tools
+#   -ToolsDir 参数 > 环境变量 TD_BUILD_TOOLS > 默认 F:\android-build-tools（仅作者本机约定，不存在时直接报错）
 #   -JdkPath  参数 > 环境变量 TD_JDK       > $ToolsDir 下 jdk-21* 自动探测
 param(
     [switch]$Release,
@@ -18,7 +18,15 @@ $ver = (Get-Content (Join-Path $apk 'package.json') -Raw | ConvertFrom-Json).ver
 
 # ---------- 工具链定位（可移植） ----------
 if (-not $ToolsDir) { $ToolsDir = $env:TD_BUILD_TOOLS }
-if (-not $ToolsDir) { $ToolsDir = 'F:\android-build-tools' }
+if (-not $ToolsDir) {
+    # 默认值仅为作者本机约定，不做静默兜底：路径不存在时 fail-fast
+    $ToolsDir = 'F:\android-build-tools'
+    if (-not (Test-Path $ToolsDir)) {
+        Write-Host "[ERROR] 未指定打包工具链位置，且默认路径不存在：$ToolsDir" -ForegroundColor Red
+        Write-Host "       请用 -ToolsDir 参数或环境变量 TD_BUILD_TOOLS 指定（目录下需含 android-sdk 与 jdk-21*）。" -ForegroundColor Red
+        exit 1
+    }
+}
 $tools = $ToolsDir
 $sdk = Join-Path $tools 'android-sdk'
 
