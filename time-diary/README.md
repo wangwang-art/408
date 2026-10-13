@@ -1,6 +1,6 @@
 # 时间日记 (Time Diary)
 
-二次元风格的时间记录应用（纯 HTML/CSS/JS 多页应用，零构建零依赖），奶油暖底 + 蜜桃珊瑚主色 + 樱花粉点缀，参考「爱时间」的信息架构 × 二次元轻量插画氛围。
+二次元风格的时间记录应用（纯 HTML/CSS/JS SPA，hash 单页路由，零构建零依赖），奶油暖底 + 蜜桃珊瑚主色 + 樱花粉点缀，参考「爱时间」的信息架构 × 二次元轻量插画氛围。
 
 ## 效果图
 
@@ -29,7 +29,7 @@
 
 ## 打包 Android APK
 
-用 [Capacitor](https://capacitorjs.com) 把网页套成原生应用，工程在 `apk/`。工具链位置**可移植**：默认 `F:\android-build-tools\`，换机时用 `-ToolsDir` 参数或环境变量 `TD_BUILD_TOOLS` 指定，JDK 自动探测（也可 `-JdkPath` / `TD_JDK` 指定），不占用 C 盘。
+用 [Capacitor](https://capacitorjs.com) 把网页套成原生应用，工程在 `apk/`。工具链位置**可移植**：用 `-ToolsDir` 参数或环境变量 `TD_BUILD_TOOLS` 指定（未指定且默认路径 `F:\android-build-tools\` 不存在时，脚本会直接报错并提示配置方式），JDK 自动探测（也可 `-JdkPath` / `TD_JDK` 指定），不占用 C 盘。
 
 ```powershell
 # 一次性准备（已完成则跳过）：
@@ -83,5 +83,4 @@ tests/            # 领域层测试（node 原生 assert）
 ## 预留扩展点（只留位置，未实现）
 
 - 换 IndexedDB：实现 `js/db/` 下新适配器即可，接口已全异步
-- hash 单页应用：路由表集中在 `js/config/constants.js`
 - 分类拖拽排序、系统通知提醒、CSV 导出、PWA 离线缓存
