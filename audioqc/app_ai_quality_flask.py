@@ -3,7 +3,7 @@
 # Termux 手机版（Flask WebUI，替代 gradio，避免 orjson/pydantic-core 编译地狱）
 # 依赖：flask（纯 Python）、numpy、scipy、onnxruntime、soxr、soundfile、Pillow
 # 启动：export DNSMOS_DIR=$HOME/dnsmos && python app_ai_quality_flask.py
-# 访问：浏览器打开 http://127.0.0.1:5000
+# 访问：浏览器打开 http://127.0.0.1:5000（默认仅本机可访问；局域网访问用 --host 0.0.0.0 显式放开）
 import os
 import io
 import sys
@@ -11,6 +11,7 @@ import traceback
 import base64
 import shutil
 import tempfile
+import threading
 
 # 嵌入式 Python（embeddable）不会自动把脚本所在目录加入 sys.path，这里显式注入，
 # 保证无论用系统 Python / venv / 嵌入式 Python 运行都能 import 到同目录模块。
@@ -37,10 +38,14 @@ P808_MODEL = _resource_path(os.path.join("DNSMOS", "model_v8.onnx"))
 AI_READY = bool(os.path.exists(PRIMARY_MODEL) and os.path.exists(P808_MODEL))
 
 _SCORER = None
+_SCORER_LOCK = threading.Lock()
 def get_scorer():
+    # 双检锁懒加载：避免多线程/多 worker 场景下重复加载模型（内存翻倍）与竞争
     global _SCORER
     if _SCORER is None:
-        _SCORER = dns.ComputeScore(PRIMARY_MODEL, P808_MODEL)
+        with _SCORER_LOCK:
+            if _SCORER is None:
+                _SCORER = dns.ComputeScore(PRIMARY_MODEL, P808_MODEL)
     return _SCORER
 
 app = Flask(__name__)
@@ -276,6 +281,17 @@ def index():
 
 
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="智能音频质检服务（规则质检 + DNSMOS）")
+    parser.add_argument("--host", default="127.0.0.1",
+                        help="绑定地址，默认仅本机 127.0.0.1；需局域网访问时显式指定 0.0.0.0")
+    parser.add_argument("--port", type=int, default=5000, help="监听端口，默认 5000")
+    args = parser.parse_args()
+
     print("DNSMOS_DIR =", DNSMOS_DIR, "| AI_READY =", AI_READY)
-    print("请在手机浏览器打开 http://127.0.0.1:5000")
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    print(f"请在浏览器打开 http://127.0.0.1:{args.port}"
+          if args.host in ("0.0.0.0", "::") else
+          f"请在浏览器打开 http://{args.host}:{args.port}")
+    if args.host in ("0.0.0.0", "::"):
+        print("[警告] 服务已绑定到所有网卡，本工具无任何鉴权，请仅在可信网络中使用！")
+    app.run(host=args.host, port=args.port, debug=False)
