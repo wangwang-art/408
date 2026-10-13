@@ -23,6 +23,7 @@ from PIL import Image, ImageDraw
 from flask import Flask, request, render_template_string
 
 import dnsmos_local_mobile as dns
+from dsp_common import read_mono, resample_to, stft
 
 SR = 16000
 
@@ -50,28 +51,10 @@ def get_scorer():
 
 app = Flask(__name__)
 
-# ==================== 无 librosa 的信号工具（与 librosa 数值一致） ====================
-def _stft(y, n_fft, hop_length):
-    win = np.hanning(n_fft + 1)[:-1].astype(np.float64)
-    y_pad = np.pad(y, (n_fft // 2, n_fft // 2), mode="constant")
-    n_frames = 1 + (len(y_pad) - n_fft) // hop_length
-    if n_frames < 1:
-        n_frames = 1
-    idx = np.arange(n_fft)[None, :] + hop_length * np.arange(n_frames)[:, None]
-    frames = y_pad[idx] * win
-    return np.fft.rfft(frames, n=n_fft, axis=1).T
-
 
 def load(path):
-    y, sr0 = sf.read(path, dtype="float32", always_2d=True)
-    y = np.mean(y, axis=1)  # mono
-    if sr0 != SR:
-        try:
-            import soxr
-            y = soxr.resample(y, sr0, SR)
-        except ImportError:
-            from scipy import signal as _sg
-            y = _sg.resample_poly(y, SR, sr0)
+    y, sr0 = read_mono(path, dtype="float32")
+    y = resample_to(y, sr0, SR)
     return y.astype(np.float32)
 
 
@@ -108,7 +91,7 @@ def rule_analyze(path):
     if sil > 0.3: issues.append(("静音过多", f"{sil*100:.0f}%", "裁剪/补录"))
 
     # 5) 高频能量占比（带宽/发闷）
-    S = np.abs(_stft(y, 2048, 512)) ** 2
+    S = np.abs(stft(y, 2048, 512)) ** 2
     f = np.fft.rfftfreq(2048, d=1.0 / SR)
     hf = float(S[f > 4000].sum() / (S.sum() + 1e-9))
     if hf < 0.02: issues.append(("高频缺失/发闷", f"{hf*100:.1f}%", "EQ 提高频"))
@@ -156,7 +139,7 @@ def build_preview_b64(y, width=640):
     pts = [(i, wav_h / 2 - float(v) * scale) for i, v in enumerate(ys)]
     if pts:
         d.line(pts, fill="#1f77b4", width=1)
-    S = np.abs(_stft(y, 1024, 512)) ** 2
+    S = np.abs(stft(y, 1024, 512)) ** 2
     mag = np.log10(S + 1e-10)
     mag -= mag.min()
     mag /= (mag.max() + 1e-9)
