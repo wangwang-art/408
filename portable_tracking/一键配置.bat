@@ -66,7 +66,7 @@ if errorlevel 1 (
     pause
     exit /b 1
 )
-"%~dp0runtime\python\python.exe" -m pip install mediapipe opencv-python -i https://pypi.tuna.tsinghua.edu.cn/simple
+"%~dp0runtime\python\python.exe" -m pip install -r "%~dp0requirements.txt" -i https://pypi.tuna.tsinghua.edu.cn/simple
 if errorlevel 1 (
     echo 依赖安装失败，请检查网络后重试。
     echo.
