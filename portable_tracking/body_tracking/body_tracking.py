@@ -11,6 +11,8 @@
 退出方式：在预览窗口中按 q 键退出。
 """
 import os
+import sys
+
 import cv2
 import mediapipe as mp
 from mediapipe.tasks import python
@@ -50,33 +52,43 @@ if __name__ == "__main__":
     )
 
     cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        raise SystemExit("无法打开摄像头，请检查摄像头设备是否可用")
+    try:
+        if not cap.isOpened():
+            print("[错误] 无法打开摄像头，请检查设备是否可用或被其他程序占用")
+            sys.exit(1)
 
-    with vision.PoseLandmarker.create_from_options(options) as landmarker:
-        while cap.isOpened():
-            success, frame = cap.read()
-            if not success:
-                break
+        with vision.PoseLandmarker.create_from_options(options) as landmarker:
+            # 时间戳用单调时钟换算：CAP_PROP_POS_MSEC 在部分设备恒为 0 或不单调，
+            # 会让 MediaPipe VIDEO 模式因时间戳非严格递增而抛错
+            t_start = cv2.getTickCount()
+            last_ts = -1
+            while cap.isOpened():
+                success, frame = cap.read()
+                if not success:
+                    break
 
-            frame = cv2.flip(frame, 1)  # 水平翻转，形成镜像效果
-            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
-            timestamp_ms = int(cap.get(cv2.CAP_PROP_POS_MSEC))
-            result = landmarker.detect_for_video(mp_image, timestamp_ms)
+                frame = cv2.flip(frame, 1)  # 水平翻转，形成镜像效果
+                rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
+                timestamp_ms = int((cv2.getTickCount() - t_start) / cv2.getTickFrequency() * 1000)
+                if timestamp_ms <= last_ts:          # 保证严格递增
+                    timestamp_ms = last_ts + 1
+                last_ts = timestamp_ms
+                result = landmarker.detect_for_video(mp_image, timestamp_ms)
 
-            for pose_landmarks in result.pose_landmarks:
-                drawing_utils.draw_landmarks(
-                    frame,
-                    pose_landmarks,
-                    PoseLandmarksConnections.POSE_LANDMARKS,
-                    _POSE_LANDMARK_STYLE,
-                    _POSE_CONNECTION_STYLE,
-                )
+                for pose_landmarks in result.pose_landmarks:
+                    drawing_utils.draw_landmarks(
+                        frame,
+                        pose_landmarks,
+                        PoseLandmarksConnections.POSE_LANDMARKS,
+                        _POSE_LANDMARK_STYLE,
+                        _POSE_CONNECTION_STYLE,
+                    )
 
-            cv2.imshow("Body Tracking", frame)
-            if cv2.waitKey(1) & 0xFF == ord("q"):
-                break
-
-    cap.release()
-    cv2.destroyAllWindows()
+                cv2.imshow("Body Tracking", frame)
+                if cv2.waitKey(1) & 0xFF == ord("q"):
+                    break
+    finally:
+        # 无论正常退出还是异常中断，都释放摄像头资源，避免设备占用残留
+        cap.release()
+        cv2.destroyAllWindows()
