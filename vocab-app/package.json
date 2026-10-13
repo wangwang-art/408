@@ -9,6 +9,8 @@
     "web": "expo start --web",
     "test": "jest",
     "test:watch": "jest --watch",
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
     "build:apk": "powershell -ExecutionPolicy Bypass -File tools/build-apk.ps1"
   },
   "jest": {
@@ -46,9 +48,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.0",
+    "@eslint/js": "^9.39.2",
     "@react-native-community/cli": "^20.2.0",
     "babel-jest": "^29.7.0",
-    "jest": "^29.7.0"
+    "eslint": "^9.39.2",
+    "globals": "^16.5.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.7.4"
   },
   "private": true
 }
