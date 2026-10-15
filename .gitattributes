@@ -2,9 +2,11 @@
 * text=auto eol=lf
 
 # cmd.exe 解析 bat/cmd 依赖 CRLF：LF 行尾会在读取缓冲区边界把行从中间截断，
-# 产生 "'ot' 不是内部或外部命令" 之类的碎片报错与闪退，故强制以 CRLF 检出
-*.bat text eol=crlf
-*.cmd text eol=crlf
+# 产生 "'ot' 不是内部或外部命令" 之类的碎片报错与闪退。
+# 注意 GitHub ZIP 下载按 blob 原样打包、不做 eol 转换，故必须把 CRLF 直接存入仓库：
+# 用 -text 禁用双向转换，仓库内 blob 即为 CRLF，ZIP/clone/工作区三方一致
+*.bat -text
+*.cmd -text
 
 # 二进制显式声明，避免换行转换与文本 diff
 *.png    binary -diff
