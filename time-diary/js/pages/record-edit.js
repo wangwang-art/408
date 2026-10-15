@@ -86,7 +86,12 @@
         startTs = editing.start;
         endTs = editing.end;
       } else if (q.ongoing === '1') {
-        startTs = Date.now(); /* 开始记录：从现在起，结束留空 = 进行中 */
+        /* 开始记录：默认接续上一条记录的结束时间（自动补录，消除空档），
+         * 超出 AUTOFILL_GAP_MS 或无上一条时才从当前时刻起 */
+        var recs = await root.TD.Repo.records.list();
+        var le = root.TD.Domain.records.lastEnd(recs);
+        var nowTs = Date.now();
+        startTs = (le && le <= nowTs && nowTs - le <= root.TD.Config.AUTOFILL_GAP_MS) ? le : nowTs;
         endTs = null;
       } else {
         /* 自动补录：默认接续上一条记录的结束时间（AUTOFILL_GAP 内），否则取当前时间 */

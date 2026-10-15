@@ -101,28 +101,9 @@
     $('btn-next').addEventListener('click', function () { UI.go('timeline', { date: DU.addDays(dateKey, 1) }); });
     $('btn-diary').addEventListener('click', function () { UI.go('diary', { date: dateKey }); });
 
-    /* ---------- 今日概览 + 时间轴 ---------- */
-    var now = Date.now();
+    /* ---------- 今日概览 + 时间轴（refreshData：初始化与结束后原地刷新） ---------- */
     var isToday = dateKey === todayKey;
-    var segs = root.TD.Domain.records.daySegments(records, dayTs, isToday ? now : DU.endOfDay(dayTs));
-    var total = root.TD.Domain.records.totalMinutes(segs);
-    $('today-total').textContent = F.duration(total);
-    $('record-count').textContent = segs.length + ' 条记录';
-
-    var bar = $('timeline-bar');
-    var blocks = root.TD.Domain.records.timelineBlocks(records, dayTs, isToday ? now : DU.endOfDay(dayTs));
-    var ongoing = await root.TD.Repo.records.ongoing();
-    if (!UI.still(token)) return;
-
-    /* 概览右侧：进行中卡片 */
-    var oc = $('ongoing-card');
-    if (ongoing && isToday) {
-      oc.style.display = '';
-      $('ongoing-name').textContent = '进行中：' + findCat(ongoing.categoryId).name;
-      $('ongoing-mins').textContent = '已 ' + F.duration((now - ongoing.start) / 60000);
-    } else {
-      oc.style.display = 'none';
-    }
+    var ongoing = null;
 
     function blockLabel(b) {
       var c = findCat(b.rec.categoryId);
@@ -135,24 +116,52 @@
       return '';
     }
 
-    bar.innerHTML = blocks.map(function (b) {
-      var grow = Math.max(1, Math.round(b.minutes));
-      if (b.type === 'gap') return '<div class="tl-gap" aria-hidden="true" style="flex-grow:' + grow + '"></div>';
-      var c = findCat(b.rec.categoryId);
-      var live = b.rec.end === null;
-      var sizeCls = b.minutes >= 120 ? ' tl-lg' : (b.minutes <= 60 ? ' tl-sm' : '');
-      return '<button type="button" class="tl-block' + sizeCls + (live ? ' tl-live' : '') +
-        '" style="flex-grow:' + grow + ';--c:' + c.color + '" data-edit="' + b.rec.id + '" aria-label="编辑记录：' +
-        UI.esc(c.name) + ' ' + DU.formatHM(b.start) + '">' + blockLabel(b) + '</button>';
-    }).join('');
+    async function refreshData() {
+      var records = await root.TD.Repo.records.list();
+      if (!UI.still(token)) return;
+      var now = Date.now();
+      var endTs = isToday ? now : DU.endOfDay(dayTs);
+      var segs = root.TD.Domain.records.daySegments(records, dayTs, endTs);
+      var total = root.TD.Domain.records.totalMinutes(segs);
+      $('today-total').textContent = F.duration(total);
+      $('record-count').textContent = segs.length + ' 条记录';
 
-    bar.querySelectorAll('[data-edit]').forEach(function (btn) {
-      btn.addEventListener('click', function () { UI.go('recordEdit', { id: btn.getAttribute('data-edit') }); });
-    });
+      var blocks = root.TD.Domain.records.timelineBlocks(records, dayTs, endTs);
+      ongoing = await root.TD.Repo.records.ongoing();
+      if (!UI.still(token)) return;
 
-    /* 空状态 */
-    if (!segs.length) $('empty-state').style.display = '';
-    else $('empty-state').style.display = 'none';
+      /* 概览右侧：进行中卡片 */
+      var oc = $('ongoing-card');
+      if (ongoing && isToday) {
+        oc.style.display = '';
+        $('ongoing-name').textContent = '进行中：' + findCat(ongoing.categoryId).name;
+        $('ongoing-mins').textContent = '已 ' + F.duration((now - ongoing.start) / 60000);
+      } else {
+        oc.style.display = 'none';
+      }
+
+      var bar = $('timeline-bar');
+      bar.innerHTML = blocks.map(function (b) {
+        var grow = Math.max(1, Math.round(b.minutes));
+        if (b.type === 'gap') return '<div class="tl-gap" aria-hidden="true" style="flex-grow:' + grow + '"></div>';
+        var c = findCat(b.rec.categoryId);
+        var live = b.rec.end === null;
+        var sizeCls = b.minutes >= 120 ? ' tl-lg' : (b.minutes <= 60 ? ' tl-sm' : '');
+        return '<button type="button" class="tl-block' + sizeCls + (live ? ' tl-live' : '') +
+          '" style="flex-grow:' + grow + ';--c:' + c.color + '" data-edit="' + b.rec.id + '" aria-label="编辑记录：' +
+          UI.esc(c.name) + ' ' + DU.formatHM(b.start) + '">' + blockLabel(b) + '</button>';
+      }).join('');
+
+      bar.querySelectorAll('[data-edit]').forEach(function (btn) {
+        btn.addEventListener('click', function () { UI.go('recordEdit', { id: btn.getAttribute('data-edit') }); });
+      });
+
+      /* 空状态 */
+      if (!segs.length) $('empty-state').style.display = '';
+      else $('empty-state').style.display = 'none';
+    }
+    await refreshData();
+    if (!UI.still(token)) return;
 
     /* ---------- 一键记录控制条 ---------- */
     var btn = $('btn-record');
@@ -167,12 +176,13 @@
         btnIcon.setAttribute('data-lucide', 'square');
         btnText.textContent = '结束记录';
         btn.setAttribute('aria-label', '结束记录');
-        hintEl.textContent = '忘记结束？点左侧按钮立即补录';
+        hintEl.textContent = '计时中，点左侧按钮结束本次记录';
         timerEl.textContent = '已计时 ' + F.clock((Date.now() - ongoing.start) / 1000);
         if (!timerHandle) timerHandle = setInterval(function () {
           timerEl.textContent = '已计时 ' + F.clock((Date.now() - ongoing.start) / 1000);
         }, 1000);
       } else {
+        if (timerHandle) { clearInterval(timerHandle); timerHandle = null; }
         btnIcon.setAttribute('data-lucide', 'play');
         btnText.textContent = '开始记录';
         btn.setAttribute('aria-label', '开始记录');
@@ -187,8 +197,10 @@
         if (!(await N.confirm('结束记录', '将「' + findCat(ongoing.categoryId).name + '」记录结束于当前时刻，确定吗？'))) return;
         ongoing.end = Date.now();
         await root.TD.Repo.records.upsert(ongoing);
-        N.toast('已结束并补录');
-        UI.go('timeline', { date: dateKey });
+        if (!UI.still(token)) return; /* 弹窗期间已切页：放弃本页 DOM 操作 */
+        N.toast('已结束记录');
+        await refreshData(); /* 原地刷新概览/时间轴/进行中卡片，不依赖假导航 */
+        renderControl();
       } else {
         UI.go('recordEdit', { date: dateKey, ongoing: '1' });
       }
