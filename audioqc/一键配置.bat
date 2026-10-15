@@ -5,6 +5,11 @@ cd /d "%~dp0"
 
 rem ---- 运行时完整则跳过 ----
 if exist "%~dp0runtime\python\python.exe" (
+    "%~dp0runtime\python\python.exe" -c "import numpy, gradio, soundfile, PIL, onnxruntime" >nul 2>&1
+    if errorlevel 1 (
+        echo [WARN] runtime exists but dependencies are incomplete. Reinstalling...
+        goto install_deps
+    )
     echo Python runtime already configured.
     echo You can double-click 一键启动.bat to run AudioQC.
     echo.
@@ -43,6 +48,7 @@ for %%F in ("%~dp0runtime\python\python*._pth") do (
     powershell -NoProfile -Command "(Get-Content -LiteralPath '%%F') -replace '^#import site','import site' | Set-Content -LiteralPath '%%F' -Encoding ASCII"
 )
 
+:install_deps
 echo [4/5] 安装 pip（清华镜像）...
 rem get-pip.py 若上次下载不完整（小于1MB）则删除重下
 if exist "%~dp0runtime\get-pip.py" (
