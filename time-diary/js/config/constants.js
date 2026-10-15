@@ -5,7 +5,7 @@
 
   root.TD.Config = {
     APP: 'time-diary',
-    VERSION: '1.2.3',
+    VERSION: '1.2.4',
     SCHEMA_VERSION: 1,
 
     /* 存储键：统一前缀，避免同域冲突 */
